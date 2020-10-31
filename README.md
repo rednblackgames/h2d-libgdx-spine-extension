@@ -20,22 +20,10 @@ dependencies {
 <dependency>
   <groupId>games.rednblack.editor</groupId>
   <artifactId>h2d-libgdx-spine-extension</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.3</version>
   <type>pom</type>
 </dependency>
 ```
 
-This extension needs `Java 8`. In order to integrate into an Android project add the following to your platform specific `build.gradle`
-
-```groovy
-android {
-    ...
-    compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
-    }
-}
-
-```
 ### License
 Spine is a commercial software distributed with its own license, in order to include Spine support in your project, please, be sure to have a valid [Spine License](https://github.com/EsotericSoftware/spine-runtimes)
