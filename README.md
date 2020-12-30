@@ -25,5 +25,12 @@ dependencies {
 </dependency>
 ```
 
+**Spine Runtime compatibility**
+
+| HyperLap2D         | Spine              |
+| ------------------ | ------------------ |
+| 0.0.4-dev          | 3.8.55.1           |
+| 0.0.3              | 3.8.55.1           |
+
 ### License
 Spine is a commercial software distributed with its own license, in order to include Spine support in your project, please, be sure to have a valid [Spine License](https://github.com/EsotericSoftware/spine-runtimes)
