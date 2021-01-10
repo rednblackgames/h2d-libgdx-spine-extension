@@ -26,7 +26,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.esotericsoftware.spine.*;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
 import games.rednblack.editor.renderer.components.SpineDataComponent;
-import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.data.MainItemVO;
 import games.rednblack.editor.renderer.data.ProjectInfoVO;
 import games.rednblack.editor.renderer.data.SpineVO;
@@ -72,13 +71,16 @@ public class SpineComponentFactory extends ComponentFactory {
         SpineObjectComponent component = engine.createComponent(SpineObjectComponent.class);
         component.skeletonJson = new SkeletonJson(rm.getSkeletonAtlas(vo.animationName));
         component.skeletonData = component.skeletonJson.readSkeletonData((rm.getSkeletonJSON(vo.animationName)));
-
-        BoneData rootBone = component.skeletonData.getBones().get(0);
-        component.rootBonePosition.set(rootBone.getX(), rootBone.getY());
-        rootBone.setScale(1f /projectInfoVO.pixelToWorld, 1f / projectInfoVO.pixelToWorld);
-
         component.skeleton = new Skeleton(component.skeletonData);
-        component.worldMultiplier = 1f/projectInfoVO.pixelToWorld;
+
+        Bone rootBone = component.skeleton.getRootBone();
+        component.rootBonePosition.set(rootBone.getX(), rootBone.getY());
+        component.rootBoneScale.set(rootBone.getScaleX(), rootBone.getScaleY());
+        component.rootBoneRotation = rootBone.getRotation();
+
+        component.worldMultiplier = 1f / projectInfoVO.pixelToWorld;
+        component.setRootBoneScale(component.worldMultiplier);
+
         AnimationStateData stateData = new AnimationStateData(component.skeletonData);
         component.state = new AnimationState(stateData);
 

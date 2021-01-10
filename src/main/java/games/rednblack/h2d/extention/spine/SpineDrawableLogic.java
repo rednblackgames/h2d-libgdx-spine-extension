@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
 import com.esotericsoftware.spine.SkeletonRenderer;
-import games.rednblack.editor.renderer.components.ParentNodeComponent;
 import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.systems.render.logic.Drawable;
@@ -30,9 +29,6 @@ public class SpineDrawableLogic implements Drawable {
     public void draw(Batch batch, Entity entity, float parentAlpha) {
         SpineObjectComponent spineObjectComponent = spineMapper.get(entity);
 
-        ParentNodeComponent parentNodeComponent = entity.getComponent(ParentNodeComponent.class);
-        Entity parentEntity = parentNodeComponent.parentEntity;
-        TransformComponent parentTransformComponent = transformComponentMapper.get(parentEntity);
         TintComponent tint = tintComponentMapper.get(entity);
 
         spineObjectComponent.skeleton.getColor().set(tint.color);
@@ -41,14 +37,10 @@ public class SpineDrawableLogic implements Drawable {
         float oldAlpha = color.a;
         spineObjectComponent.skeleton.getColor().a *= parentAlpha;
 
-        if (parentTransformComponent.scaleX == 1 && parentTransformComponent.scaleY == 1 && parentTransformComponent.rotation == 0) {
-            computeTransform(entity);
-            applyTransform(entity, batch);
-            skeletonRenderer.draw((PolygonSpriteBatch)batch, spineObjectComponent.skeleton);
-            resetTransform(entity, batch);
-        } else {
-            skeletonRenderer.draw((PolygonSpriteBatch)batch, spineObjectComponent.skeleton);
-        }
+        computeTransform(entity).mulLeft(batch.getTransformMatrix());
+        applyTransform(entity, batch);
+        skeletonRenderer.draw((PolygonSpriteBatch)batch, spineObjectComponent.skeleton);
+        resetTransform(entity, batch);
 
         color.a = oldAlpha;
     }

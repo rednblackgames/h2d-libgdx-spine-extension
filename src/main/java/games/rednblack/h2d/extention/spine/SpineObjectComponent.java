@@ -20,8 +20,14 @@ public class SpineObjectComponent implements BaseComponent {
     public float minX;
     public float minY;
     public float worldMultiplier;
+
     public Vector2 rootBonePosition = new Vector2();
+    public Vector2 rootBoneScale = new Vector2();
+    public float rootBoneRotation = 0;
+
+    private final Vector2 tmp = new Vector2();
     private final FloatArray temp = new FloatArray();
+
     public final Affine2 worldTransform = new Affine2();
     public final Matrix4 computedTransform = new Matrix4();
     public final Matrix4 oldTransform = new Matrix4();
@@ -73,6 +79,16 @@ public class SpineObjectComponent implements BaseComponent {
 
         dimensionsComponent.width = (maxX - minX);
         dimensionsComponent.height = (maxY - minY);
+    }
+
+    public void setRootBoneScale(float scale) {
+        setRootBoneScale(scale, scale);
+    }
+
+    public void setRootBoneScale(float scaleX, float scaleY) {
+        Bone rootBone = skeleton.getRootBone();
+        tmp.set(rootBoneScale).scl(scaleX, scaleY);
+        rootBone.setScale(tmp.x, tmp.y);
     }
 
     @Override
