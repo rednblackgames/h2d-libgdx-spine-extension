@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
 import com.esotericsoftware.spine.SkeletonRenderer;
+import games.rednblack.editor.renderer.components.MainItemComponent;
 import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.systems.render.logic.Drawable;
@@ -15,13 +16,13 @@ import games.rednblack.editor.renderer.systems.render.logic.Drawable;
 public class SpineDrawableLogic implements Drawable {
     private final ComponentMapper<SpineObjectComponent> spineObjectComponentMapper = ComponentMapper.getFor(SpineObjectComponent.class);
     private final ComponentMapper<TransformComponent> transformComponentMapper = ComponentMapper.getFor(TransformComponent.class);
-    private final ComponentMapper<SpineObjectComponent> spineMapper;
-    private final ComponentMapper<TintComponent> tintComponentMapper;
+    private final ComponentMapper<MainItemComponent> mainItemComponentMapper = ComponentMapper.getFor(MainItemComponent.class);
+    private final ComponentMapper<SpineObjectComponent> spineMapper = ComponentMapper.getFor(SpineObjectComponent.class);
+    private final ComponentMapper<TintComponent> tintComponentMapper = ComponentMapper.getFor(TintComponent.class);
+
     private final SkeletonRenderer skeletonRenderer;
 
     public SpineDrawableLogic() {
-        spineMapper = ComponentMapper.getFor(SpineObjectComponent.class);
-        tintComponentMapper = ComponentMapper.getFor(TintComponent.class);
         skeletonRenderer = new SkeletonRenderer();
     }
 
@@ -46,10 +47,11 @@ public class SpineDrawableLogic implements Drawable {
     }
 
     protected Matrix4 computeTransform (Entity rootEntity) {
+        MainItemComponent mainItemComponent = mainItemComponentMapper.get(rootEntity);
         SpineObjectComponent spineObjectComponent = spineObjectComponentMapper.get(rootEntity);
         TransformComponent curTransform = transformComponentMapper.get(rootEntity);
 
-        Affine2 worldTransform = spineObjectComponent.worldTransform;
+        Affine2 worldTransform = mainItemComponent.worldTransform;
 
         float originX = curTransform.originX;
         float originY = curTransform.originY;
@@ -63,19 +65,19 @@ public class SpineDrawableLogic implements Drawable {
         if (originX != 0 || originY != 0) worldTransform.translate(-originX, -originY);
         worldTransform.translate(-spineObjectComponent.minX, -spineObjectComponent.minY);
 
-        spineObjectComponent.computedTransform.set(worldTransform);
+        mainItemComponent.computedTransform.set(worldTransform);
 
-        return spineObjectComponent.computedTransform;
+        return mainItemComponent.computedTransform;
     }
 
     protected void applyTransform (Entity rootEntity, Batch batch) {
-        SpineObjectComponent spineObjectComponent = spineObjectComponentMapper.get(rootEntity);
-        spineObjectComponent.oldTransform.set(batch.getTransformMatrix());
-        batch.setTransformMatrix(spineObjectComponent.computedTransform);
+        MainItemComponent mainItemComponent = mainItemComponentMapper.get(rootEntity);
+        mainItemComponent.oldTransform.set(batch.getTransformMatrix());
+        batch.setTransformMatrix(mainItemComponent.computedTransform);
     }
 
     protected void resetTransform (Entity rootEntity, Batch batch) {
-        SpineObjectComponent spineObjectComponent = spineObjectComponentMapper.get(rootEntity);
-        batch.setTransformMatrix(spineObjectComponent.oldTransform);
+        MainItemComponent mainItemComponent = mainItemComponentMapper.get(rootEntity);
+        batch.setTransformMatrix(mainItemComponent.oldTransform);
     }
 }

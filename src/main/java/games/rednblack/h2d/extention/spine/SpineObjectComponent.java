@@ -1,7 +1,5 @@
 package games.rednblack.h2d.extention.spine;
 
-import com.badlogic.gdx.math.Affine2;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
@@ -27,10 +25,6 @@ public class SpineObjectComponent implements BaseComponent {
 
     private final Vector2 tmp = new Vector2();
     private final FloatArray temp = new FloatArray();
-
-    public final Affine2 worldTransform = new Affine2();
-    public final Matrix4 computedTransform = new Matrix4();
-    public final Matrix4 oldTransform = new Matrix4();
 
     public Array<Animation> getAnimations() {
         return skeletonData.getAnimations();
@@ -104,8 +98,5 @@ public class SpineObjectComponent implements BaseComponent {
         worldMultiplier = 0;
 
         temp.clear();
-        worldTransform.idt();
-        computedTransform.idt();
-        oldTransform.idt();
     }
 }
