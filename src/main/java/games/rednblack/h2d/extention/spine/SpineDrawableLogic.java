@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
 import com.esotericsoftware.spine.SkeletonRenderer;
@@ -38,7 +37,7 @@ public class SpineDrawableLogic implements Drawable {
 
         computeTransform(entity).mulLeft(batch.getTransformMatrix());
         applyTransform(entity, batch);
-        skeletonRenderer.draw((PolygonSpriteBatch)batch, spineObjectComponent.skeleton);
+        skeletonRenderer.draw(batch, spineObjectComponent.skeleton);
         resetTransform(entity, batch);
 
         color.a = oldAlpha;
