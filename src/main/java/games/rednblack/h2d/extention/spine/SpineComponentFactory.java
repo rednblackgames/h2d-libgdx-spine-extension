@@ -73,19 +73,15 @@ public class SpineComponentFactory extends ComponentFactory {
         component.skeletonData = component.skeletonJson.readSkeletonData((rm.getSkeletonJSON(vo.animationName)));
         component.skeleton = new Skeleton(component.skeletonData);
 
-        Bone rootBone = component.skeleton.getRootBone();
-        component.rootBonePosition.set(rootBone.getX(), rootBone.getY());
-        component.rootBoneScale.set(rootBone.getScaleX(), rootBone.getScaleY());
-        component.rootBoneRotation = rootBone.getRotation();
-
         component.worldMultiplier = 1f / projectInfoVO.pixelToWorld;
-        component.setRootBoneScale(component.worldMultiplier);
 
         AnimationStateData stateData = new AnimationStateData(component.skeletonData);
         component.state = new AnimationState(stateData);
 
         DimensionsComponent dimensionsComponent = ComponentRetriever.get(entity, DimensionsComponent.class);
         component.computeBoundBox(dimensionsComponent);
+        dimensionsComponent.width *= component.worldMultiplier;
+        dimensionsComponent.height *= component.worldMultiplier;
 
         component.setAnimation(vo.currentAnimationName.isEmpty() ? component.skeletonData.getAnimations().get(0).getName() : vo.currentAnimationName);
 

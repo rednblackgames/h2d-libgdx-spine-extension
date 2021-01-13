@@ -1,6 +1,5 @@
 package games.rednblack.h2d.extention.spine;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.esotericsoftware.spine.*;
@@ -17,13 +16,8 @@ public class SpineObjectComponent implements BaseComponent {
     public AnimationState state;
     public float minX;
     public float minY;
-    public float worldMultiplier;
+    public float worldMultiplier = 1;
 
-    public Vector2 rootBonePosition = new Vector2();
-    public Vector2 rootBoneScale = new Vector2();
-    public float rootBoneRotation = 0;
-
-    private final Vector2 tmp = new Vector2();
     private final FloatArray temp = new FloatArray();
 
     public Array<Animation> getAnimations() {
@@ -75,16 +69,6 @@ public class SpineObjectComponent implements BaseComponent {
         dimensionsComponent.height = (maxY - minY);
     }
 
-    public void setRootBoneScale(float scale) {
-        setRootBoneScale(scale, scale);
-    }
-
-    public void setRootBoneScale(float scaleX, float scaleY) {
-        Bone rootBone = skeleton.getRootBone();
-        tmp.set(rootBoneScale).scl(scaleX, scaleY);
-        rootBone.setScale(tmp.x, tmp.y);
-    }
-
     @Override
     public void reset() {
         skeletonData = null;
@@ -95,7 +79,7 @@ public class SpineObjectComponent implements BaseComponent {
         minX = 0;
         minY = 0;
 
-        worldMultiplier = 0;
+        worldMultiplier = 1;
 
         temp.clear();
     }
