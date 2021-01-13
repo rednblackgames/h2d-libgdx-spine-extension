@@ -25,7 +25,8 @@ public class SpineObjectComponent implements BaseComponent {
     }
 
     public void setAnimation(String animName) {
-        state.setAnimation(0, animName, true);
+        AnimationState.TrackEntry trackEntry = state.setAnimation(0, animName, true);
+        trackEntry.setMixDuration(0.2f);
     }
 
     public AnimationState getState() {
