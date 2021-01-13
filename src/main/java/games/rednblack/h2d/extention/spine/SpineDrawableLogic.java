@@ -3,6 +3,7 @@ package games.rednblack.h2d.extention.spine;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
@@ -39,6 +40,7 @@ public class SpineDrawableLogic implements Drawable {
         applyTransform(entity, batch);
         skeletonRenderer.draw(batch, spineObjectComponent.skeleton);
         resetTransform(entity, batch);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         color.a = oldAlpha;
     }
