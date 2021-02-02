@@ -11,7 +11,7 @@ public class SpineSystem extends IteratingSystem {
     private ComponentMapper<SpineObjectComponent> spineObjectComponentMapper = ComponentMapper.getFor(SpineObjectComponent.class);
 
     public SpineSystem() {
-        super(Family.all(SpineDataComponent.class).get());
+        super(Family.all(SpineDataComponent.class, SpineObjectComponent.class).get());
     }
 
     @Override
