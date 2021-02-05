@@ -20,7 +20,7 @@ dependencies {
 <dependency>
   <groupId>games.rednblack.editor</groupId>
   <artifactId>h2d-libgdx-spine-extension</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
   <type>pom</type>
 </dependency>
 ```
@@ -29,6 +29,7 @@ dependencies {
 
 | HyperLap2D         | Spine              |
 | ------------------ | ------------------ |
+| 0.0.5-dev          | 3.8.55.1           |
 | 0.0.4              | 3.8.55.1           |
 | 0.0.3              | 3.8.55.1           |
 
