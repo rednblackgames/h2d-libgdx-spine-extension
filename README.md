@@ -5,13 +5,14 @@ HyperLap2D extension for libgdx runtime that adds Spine rendering support.
 ### Integration
 
 #### Gradle
-Release artifacts are available through ![Bintray](https://img.shields.io/bintray/v/rednblackgames/HyperLap2D/h2d-libgdx-spine-extension) 
+![maven-central](https://img.shields.io/maven-central/v/games.rednblack.hyperlap2d/libgdx-spine-extension?color=blue&label=release)
+![sonatype-nexus](https://img.shields.io/nexus/s/games.rednblack.hyperlap2d/libgdx-spine-extension?label=snapshot&server=https%3A%2F%2Foss.sonatype.org)
 
 Extension needs to be included into your `core` project.
 ```groovy
 dependencies {
     api "com.esotericsoftware.spine:spine-libgdx:$spineVersion"
-    api "games.rednblack.editor:h2d-libgdx-spine-extension:$h2dSpineExtension"
+    api "games.rednblack.hyperlap2d:libgdx-spine-extension:$h2dSpineExtension"
 }
 ```
 
@@ -19,8 +20,8 @@ dependencies {
 ```xml
 <dependency>
   <groupId>games.rednblack.editor</groupId>
-  <artifactId>h2d-libgdx-spine-extension</artifactId>
-  <version>0.0.4</version>
+  <artifactId>libgdx-spine-extension</artifactId>
+  <version>0.0.5</version>
   <type>pom</type>
 </dependency>
 ```
@@ -29,7 +30,7 @@ dependencies {
 
 | HyperLap2D         | Spine              |
 | ------------------ | ------------------ |
-| 0.0.5-dev          | 3.8.55.1           |
+| 0.0.5              | 3.8.55.1           |
 | 0.0.4              | 3.8.55.1           |
 | 0.0.3              | 3.8.55.1           |
 
