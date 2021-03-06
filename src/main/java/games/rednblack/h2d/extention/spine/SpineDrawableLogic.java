@@ -56,8 +56,8 @@ public class SpineDrawableLogic implements Drawable {
         float x = curTransform.x;
         float y = curTransform.y;
         float rotation = curTransform.rotation;
-        float scaleX = curTransform.scaleX * spineObjectComponent.worldMultiplier;
-        float scaleY = curTransform.scaleY * spineObjectComponent.worldMultiplier;
+        float scaleX = curTransform.scaleX * spineObjectComponent.worldMultiplier * (curTransform.flipX ? -1 : 1);
+        float scaleY = curTransform.scaleY * spineObjectComponent.worldMultiplier * (curTransform.flipY ? -1 : 1);
 
         worldTransform.setToTrnRotScl(x + originX , y + originY, rotation, scaleX, scaleY);
         if (originX != 0 || originY != 0) worldTransform.translate(-originX / spineObjectComponent.worldMultiplier, -originY / spineObjectComponent.worldMultiplier);
