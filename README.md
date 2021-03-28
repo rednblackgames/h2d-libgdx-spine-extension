@@ -30,9 +30,8 @@ dependencies {
 
 | HyperLap2D         | Spine              |
 | ------------------ | ------------------ |
+| 0.0.6-SNAPSHOT     | 3.8.55.1           |
 | 0.0.5              | 3.8.55.1           |
-| 0.0.4              | 3.8.55.1           |
-| 0.0.3              | 3.8.55.1           |
 
 ### License
 Spine is a commercial software distributed with its own license, in order to include Spine support in your project, please, be sure to have a valid [Spine License](https://github.com/EsotericSoftware/spine-runtimes)
