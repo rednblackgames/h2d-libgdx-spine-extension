@@ -21,7 +21,7 @@ dependencies {
 <dependency>
   <groupId>games.rednblack.editor</groupId>
   <artifactId>libgdx-spine-extension</artifactId>
-  <version>0.0.5</version>
+  <version>0.0.6</version>
   <type>pom</type>
 </dependency>
 ```
@@ -30,7 +30,7 @@ dependencies {
 
 | HyperLap2D         | Spine              |
 | ------------------ | ------------------ |
-| 0.0.6-SNAPSHOT     | 3.8.55.1           |
+| 0.0.6              | 3.8.55.1           |
 | 0.0.5              | 3.8.55.1           |
 
 ### License
