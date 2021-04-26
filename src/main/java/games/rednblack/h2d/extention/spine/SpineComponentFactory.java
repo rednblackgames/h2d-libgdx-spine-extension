@@ -25,6 +25,7 @@ import com.esotericsoftware.spine.*;
 import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
 import games.rednblack.editor.renderer.components.SpineDataComponent;
+import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.data.MainItemVO;
 import games.rednblack.editor.renderer.data.ProjectInfoVO;
 import games.rednblack.editor.renderer.data.SpineVO;
@@ -81,6 +82,10 @@ public class SpineComponentFactory extends ComponentFactory {
         component.computeBoundBox(dimensionsComponent);
         dimensionsComponent.width *= component.worldMultiplier;
         dimensionsComponent.height *= component.worldMultiplier;
+
+        TransformComponent transformComponent = ComponentRetriever.get(entity, TransformComponent.class);
+        transformComponent.originX = dimensionsComponent.width / 2f;
+        transformComponent.originY = dimensionsComponent.height / 2f;
 
         component.setAnimation(vo.currentAnimationName.isEmpty() ? component.skeletonData.getAnimations().get(0).getName() : vo.currentAnimationName);
 
