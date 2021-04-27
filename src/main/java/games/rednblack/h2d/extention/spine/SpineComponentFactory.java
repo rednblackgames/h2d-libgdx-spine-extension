@@ -84,8 +84,11 @@ public class SpineComponentFactory extends ComponentFactory {
         dimensionsComponent.height *= component.worldMultiplier;
 
         TransformComponent transformComponent = ComponentRetriever.get(entity, TransformComponent.class);
-        transformComponent.originX = dimensionsComponent.width / 2f;
-        transformComponent.originY = dimensionsComponent.height / 2f;
+        if (Float.isNaN(vo.originX)) transformComponent.originX = dimensionsComponent.width / 2f;
+        else transformComponent.originX = vo.originX;
+
+        if (Float.isNaN(vo.originY)) transformComponent.originY = dimensionsComponent.height / 2f;
+        else transformComponent.originY = vo.originY;
 
         component.setAnimation(vo.currentAnimationName.isEmpty() ? component.skeletonData.getAnimations().get(0).getName() : vo.currentAnimationName);
 
@@ -99,6 +102,23 @@ public class SpineComponentFactory extends ComponentFactory {
         component.animationName = vo.animationName;
 
         component.currentAnimationName = vo.currentAnimationName.isEmpty() ? spineObjectComponent.skeletonData.getAnimations().get(0).getName() : vo.currentAnimationName;
+
+        entity.add(component);
+
+        return component;
+    }
+
+    @Override
+    protected TransformComponent createTransformComponent(Entity entity, MainItemVO vo, DimensionsComponent dimensionsComponent) {
+        TransformComponent component = engine.createComponent(TransformComponent.class);
+        component.rotation = vo.rotation;
+        component.scaleX = vo.scaleX;
+        component.scaleY = vo.scaleY;
+        component.x = vo.x;
+        component.y = vo.y;
+
+        component.flipX = vo.flipX;
+        component.flipY = vo.flipY;
 
         entity.add(component);
 
