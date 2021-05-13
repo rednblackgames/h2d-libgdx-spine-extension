@@ -25,7 +25,7 @@ public class SpineDrawableLogic implements Drawable {
     }
 
     @Override
-    public void draw(Batch batch, Entity entity, float parentAlpha) {
+    public void draw(Batch batch, Entity entity, float parentAlpha, boolean normal) {
         SpineObjectComponent spineObjectComponent = spineMapper.get(entity);
 
         TintComponent tint = tintComponentMapper.get(entity);
