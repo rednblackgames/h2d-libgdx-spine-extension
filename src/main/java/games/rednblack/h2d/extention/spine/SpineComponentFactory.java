@@ -69,7 +69,7 @@ public class SpineComponentFactory extends ComponentFactory {
         ProjectInfoVO projectInfoVO = rm.getProjectVO();
 
         SpineObjectComponent component = engine.createComponent(SpineObjectComponent.class);
-        component.skeletonJson = new SkeletonJson(rm.getMainPack());
+        component.skeletonJson = new SkeletonJson(new PrefixAtlasAttachmentLoader(vo.animationName, rm.getMainPack()));
         component.skeletonData = component.skeletonJson.readSkeletonData((rm.getSkeletonJSON(vo.animationName)));
         component.skeleton = new Skeleton(component.skeletonData);
 
