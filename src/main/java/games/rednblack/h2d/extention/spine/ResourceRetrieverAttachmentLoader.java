@@ -1,22 +1,23 @@
 package games.rednblack.h2d.extention.spine;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.esotericsoftware.spine.Skin;
 import com.esotericsoftware.spine.attachments.*;
+import games.rednblack.editor.renderer.resources.IResourceRetriever;
 
-public class PrefixAtlasAttachmentLoader implements AttachmentLoader {
-    private TextureAtlas atlas;
+public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
+    private IResourceRetriever resourceRetriever;
     private String prefix;
 
-    public PrefixAtlasAttachmentLoader (String prefix, TextureAtlas atlas) {
-        if (atlas == null) throw new IllegalArgumentException("atlas cannot be null.");
+    public ResourceRetrieverAttachmentLoader(String prefix, IResourceRetriever resourceRetriever) {
+        if (resourceRetriever == null) throw new IllegalArgumentException("resourceRetriever cannot be null.");
         if (prefix == null) throw new IllegalArgumentException("prefix cannot be null.");
-        this.atlas = atlas;
+        this.resourceRetriever = resourceRetriever;
         this.prefix = prefix;
     }
 
     public RegionAttachment newRegionAttachment (Skin skin, String name, String path) {
-        TextureAtlas.AtlasRegion region = atlas.findRegion(prefix + path);
+        TextureRegion region = resourceRetriever.getTextureRegion(prefix + path);
         if (region == null) throw new RuntimeException("Region not found in atlas: " + path + " (region attachment: " + name + ")");
         RegionAttachment attachment = new RegionAttachment(name);
         attachment.setRegion(region);
@@ -24,7 +25,7 @@ public class PrefixAtlasAttachmentLoader implements AttachmentLoader {
     }
 
     public MeshAttachment newMeshAttachment (Skin skin, String name, String path) {
-        TextureAtlas.AtlasRegion region = atlas.findRegion(prefix + path);
+        TextureRegion region = resourceRetriever.getTextureRegion(prefix + path);
         if (region == null) throw new RuntimeException("Region not found in atlas: " + path + " (mesh attachment: " + name + ")");
         MeshAttachment attachment = new MeshAttachment(name);
         attachment.setRegion(region);
