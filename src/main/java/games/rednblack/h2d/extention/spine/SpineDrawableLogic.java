@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
 import com.esotericsoftware.spine.SkeletonRenderer;
+import com.esotericsoftware.spine.Skin;
 import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.systems.render.logic.Drawable;
+import games.rednblack.editor.renderer.utils.ComponentRetriever;
 
 public class SpineDrawableLogic implements Drawable {
     private final ComponentMapper<SpineObjectComponent> spineObjectComponentMapper = ComponentMapper.getFor(SpineObjectComponent.class);
@@ -27,6 +29,8 @@ public class SpineDrawableLogic implements Drawable {
     @Override
     public void draw(Batch batch, Entity entity, float parentAlpha, RenderingType renderingType) {
         SpineObjectComponent spineObjectComponent = spineMapper.get(entity);
+        NormalSpineComponent normalComponent = ComponentRetriever.get(entity, NormalSpineComponent.class);
+        if (renderingType == RenderingType.NORMAL_MAP && normalComponent == null) return;
 
         TintComponent tint = tintComponentMapper.get(entity);
 
@@ -38,7 +42,14 @@ public class SpineDrawableLogic implements Drawable {
 
         computeTransform(entity).mulLeft(batch.getTransformMatrix());
         applyTransform(entity, batch);
-        skeletonRenderer.draw(batch, spineObjectComponent.skeleton);
+        if (renderingType == RenderingType.NORMAL_MAP) {
+            Skin oldSkin = spineObjectComponent.skeleton.getSkin();
+            spineObjectComponent.skeleton.setSkin(normalComponent.normalSkin);
+            skeletonRenderer.draw(batch, spineObjectComponent.skeleton);
+            spineObjectComponent.skeleton.setSkin(oldSkin);
+        } else {
+            skeletonRenderer.draw(batch, spineObjectComponent.skeleton);
+        }
         resetTransform(entity, batch);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 

@@ -26,6 +26,7 @@ import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
 import games.rednblack.editor.renderer.components.SpineDataComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
+import games.rednblack.editor.renderer.components.normal.NormalMapRendering;
 import games.rednblack.editor.renderer.data.MainItemVO;
 import games.rednblack.editor.renderer.data.ProjectInfoVO;
 import games.rednblack.editor.renderer.data.SpineVO;
@@ -93,6 +94,15 @@ public class SpineComponentFactory extends ComponentFactory {
         component.setAnimation(vo.currentAnimationName.isEmpty() ? component.skeletonData.getAnimations().get(0).getName() : vo.currentAnimationName);
 
         entity.add(component);
+
+        String skinName = component.skeleton.getSkin() == null ? "" : component.skeleton.getSkin().getName();
+        Skin normalSkin = component.skeletonData.findSkin(skinName + ".normal");
+        if (normalSkin != null) {
+            NormalSpineComponent normalComponent = engine.createComponent(NormalSpineComponent.class);
+            normalComponent.normalSkin = normalSkin;
+            entity.add(normalComponent);
+            entity.add(engine.createComponent(NormalMapRendering.class));
+        }
 
         return component;
     }
