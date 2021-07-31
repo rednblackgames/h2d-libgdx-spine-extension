@@ -70,9 +70,13 @@ public class SpineComponentFactory extends ComponentFactory {
         ProjectInfoVO projectInfoVO = rm.getProjectVO();
 
         SpineObjectComponent component = engine.createComponent(SpineObjectComponent.class);
-        component.skeletonJson = new SkeletonJson(new ResourceRetrieverAttachmentLoader(vo.animationName, rm));
+        NormalMapRendering normalMapRendering = engine.createComponent(NormalMapRendering.class);
+        component.skeletonJson = new SkeletonJson(new ResourceRetrieverAttachmentLoader(vo.animationName, rm, normalMapRendering));
         component.skeletonData = component.skeletonJson.readSkeletonData((rm.getSkeletonJSON(vo.animationName)));
         component.skeleton = new Skeleton(component.skeletonData);
+        if (component.skeletonData.findSkin("normalMap") != null) {
+            entity.add(normalMapRendering);
+        }
 
         component.worldMultiplier = 1f / projectInfoVO.pixelToWorld;
 
@@ -94,15 +98,6 @@ public class SpineComponentFactory extends ComponentFactory {
         component.setAnimation(vo.currentAnimationName.isEmpty() ? component.skeletonData.getAnimations().get(0).getName() : vo.currentAnimationName);
 
         entity.add(component);
-
-        String skinName = component.skeleton.getSkin() == null ? "" : component.skeleton.getSkin().getName();
-        Skin normalSkin = component.skeletonData.findSkin(skinName + ".normal");
-        if (normalSkin != null) {
-            NormalSpineComponent normalComponent = engine.createComponent(NormalSpineComponent.class);
-            normalComponent.normalSkin = normalSkin;
-            entity.add(normalComponent);
-            entity.add(engine.createComponent(NormalMapRendering.class));
-        }
 
         return component;
     }

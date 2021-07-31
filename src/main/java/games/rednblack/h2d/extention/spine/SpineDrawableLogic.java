@@ -8,19 +8,21 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
 import com.esotericsoftware.spine.SkeletonRenderer;
-import com.esotericsoftware.spine.Skin;
 import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
+import games.rednblack.editor.renderer.components.normal.NormalMapRendering;
 import games.rednblack.editor.renderer.systems.render.logic.Drawable;
-import games.rednblack.editor.renderer.utils.ComponentRetriever;
+import games.rednblack.editor.renderer.utils.value.DynamicValue;
 
-public class SpineDrawableLogic implements Drawable {
+public class SpineDrawableLogic implements Drawable, DynamicValue<Boolean> {
     private final ComponentMapper<SpineObjectComponent> spineObjectComponentMapper = ComponentMapper.getFor(SpineObjectComponent.class);
     private final ComponentMapper<TransformComponent> transformComponentMapper = ComponentMapper.getFor(TransformComponent.class);
     private final ComponentMapper<SpineObjectComponent> spineMapper = ComponentMapper.getFor(SpineObjectComponent.class);
     private final ComponentMapper<TintComponent> tintComponentMapper = ComponentMapper.getFor(TintComponent.class);
+    private final ComponentMapper<NormalMapRendering> normalMapMapper = ComponentMapper.getFor(NormalMapRendering.class);
 
     private final SkeletonRenderer skeletonRenderer;
+    private RenderingType renderingType;
 
     public SpineDrawableLogic() {
         skeletonRenderer = new SkeletonRenderer();
@@ -28,9 +30,11 @@ public class SpineDrawableLogic implements Drawable {
 
     @Override
     public void draw(Batch batch, Entity entity, float parentAlpha, RenderingType renderingType) {
+        this.renderingType = renderingType;
         SpineObjectComponent spineObjectComponent = spineMapper.get(entity);
-        NormalSpineComponent normalComponent = ComponentRetriever.get(entity, NormalSpineComponent.class);
-        if (renderingType == RenderingType.NORMAL_MAP && normalComponent == null) return;
+        NormalMapRendering normalMapRendering = normalMapMapper.get(entity);
+        if (normalMapRendering != null && normalMapRendering.useNormalMap == null)
+            normalMapRendering.useNormalMap = this;
 
         TintComponent tint = tintComponentMapper.get(entity);
 
@@ -42,14 +46,7 @@ public class SpineDrawableLogic implements Drawable {
 
         computeTransform(entity).mulLeft(batch.getTransformMatrix());
         applyTransform(entity, batch);
-        if (renderingType == RenderingType.NORMAL_MAP) {
-            Skin oldSkin = spineObjectComponent.skeleton.getSkin();
-            spineObjectComponent.skeleton.setSkin(normalComponent.normalSkin);
-            skeletonRenderer.draw(batch, spineObjectComponent.skeleton);
-            spineObjectComponent.skeleton.setSkin(oldSkin);
-        } else {
-            skeletonRenderer.draw(batch, spineObjectComponent.skeleton);
-        }
+        skeletonRenderer.draw(batch, spineObjectComponent.skeleton);
         resetTransform(entity, batch);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -88,5 +85,10 @@ public class SpineDrawableLogic implements Drawable {
     protected void resetTransform (Entity rootEntity, Batch batch) {
         TransformComponent curTransform = transformComponentMapper.get(rootEntity);
         batch.setTransformMatrix(curTransform.oldTransform);
+    }
+
+    @Override
+    public Boolean get() {
+        return renderingType == RenderingType.NORMAL_MAP;
     }
 }

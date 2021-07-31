@@ -70,7 +70,6 @@ public class SpineItemType implements IExternalItemType {
     public void injectMappers() {
         ComponentRetriever.addMapper(SpineDataComponent.class);
         ComponentRetriever.addMapper(SpineObjectComponent.class);
-        ComponentRetriever.addMapper(NormalSpineComponent.class);
     }
 
     @Override
