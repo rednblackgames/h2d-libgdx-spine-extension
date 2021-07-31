@@ -42,7 +42,7 @@ repositories {
 if(isReleaseBuild) {
     signing {
         useGpgCmd()
-        sign publishing.publications.mavenJava
+        sign publishing.publications
     }
 
     gradle.taskGraph.whenReady {
@@ -59,6 +59,7 @@ if(isReleaseBuild) {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+
             from components.java
             versionMapping {
                 usage('java-api') {
