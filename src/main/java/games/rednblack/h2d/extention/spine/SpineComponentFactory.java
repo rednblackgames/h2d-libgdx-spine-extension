@@ -18,14 +18,13 @@
 
 package games.rednblack.h2d.extention.spine;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.PooledEngine;
+import com.artemis.ComponentMapper;
+import com.artemis.EntityTransmuter;
+import com.artemis.EntityTransmuterFactory;
 import com.badlogic.gdx.physics.box2d.World;
 import com.esotericsoftware.spine.*;
 import games.rednblack.editor.renderer.box2dLight.RayHandler;
-import games.rednblack.editor.renderer.components.DimensionsComponent;
-import games.rednblack.editor.renderer.components.SpineDataComponent;
-import games.rednblack.editor.renderer.components.TransformComponent;
+import games.rednblack.editor.renderer.components.*;
 import games.rednblack.editor.renderer.components.normal.NormalMapRendering;
 import games.rednblack.editor.renderer.data.MainItemVO;
 import games.rednblack.editor.renderer.data.ProjectInfoVO;
@@ -37,45 +36,55 @@ import games.rednblack.editor.renderer.utils.ComponentRetriever;
 
 public class SpineComponentFactory extends ComponentFactory {
 
-    private SpineObjectComponent spineObjectComponent;
+    protected ComponentMapper<SpineObjectComponent> spineObjectCM;
+    protected ComponentMapper<SpineDataComponent> spineDataCM;
+    protected ComponentMapper<NormalMapRendering> normalMapRenderingCM;
+
+    private EntityTransmuter transmuter;
 
     public SpineComponentFactory() {
-        super();
-    }
 
-    public SpineComponentFactory(PooledEngine engine, RayHandler rayHandler, World world, IResourceRetriever rm) {
-        super(engine, rayHandler, world, rm);
     }
 
     @Override
-    public void createComponents(Entity root, Entity entity, MainItemVO vo) {
-        createCommonComponents(entity, vo, EntityFactory.SPINE_TYPE);
-        createParentNodeComponent(root, entity);
-        createNodeComponent(root, entity);
-        createPhysicsComponents(entity, vo);
-        createLightComponents(entity, vo);
-        spineObjectComponent = createSpineObjectComponent(entity, (SpineVO) vo);
+    public void injectDependencies(com.artemis.World engine, RayHandler rayHandler, World world, IResourceRetriever rm) {
+        super.injectDependencies(engine, rayHandler, world, rm);
+
+        transmuter = new EntityTransmuterFactory(engine)
+                .add(ParentNodeComponent.class)
+                .add(SpineObjectComponent.class)
+                .add(SpineDataComponent.class)
+                .add(NormalMapRendering.class)
+                .build();
+    }
+
+    @Override
+    public int createSpecialisedEntity(int root, MainItemVO vo) {
+        int entity = createGeneralEntity(vo, EntityFactory.SPINE_TYPE);
+        transmuter.transmute(entity);
+
+        adjustNodeHierarchy(root, entity);
+
+        createSpineObjectComponent(entity, (SpineVO) vo);
         createSpineDataComponent(entity, (SpineVO) vo);
+        return entity;
     }
 
     @Override
-    protected DimensionsComponent createDimensionsComponent(Entity entity, MainItemVO vo) {
-        DimensionsComponent component = engine.createComponent(DimensionsComponent.class);
+    protected void initializeDimensionsComponent(int entity, DimensionsComponent component, MainItemVO vo) {
 
-        entity.add(component);
-        return component;
     }
 
-    protected SpineObjectComponent createSpineObjectComponent(Entity entity, SpineVO vo) {
+    protected SpineObjectComponent createSpineObjectComponent(int entity, SpineVO vo) {
         ProjectInfoVO projectInfoVO = rm.getProjectVO();
 
-        SpineObjectComponent component = engine.createComponent(SpineObjectComponent.class);
-        NormalMapRendering normalMapRendering = engine.createComponent(NormalMapRendering.class);
+        SpineObjectComponent component = spineObjectCM.get(entity);
+        NormalMapRendering normalMapRendering = normalMapRenderingCM.get(entity);
         component.skeletonJson = new SkeletonJson(new ResourceRetrieverAttachmentLoader(vo.animationName, rm, normalMapRendering));
         component.skeletonData = component.skeletonJson.readSkeletonData((rm.getSkeletonJSON(vo.animationName)));
         component.skeleton = new Skeleton(component.skeletonData);
-        if (component.skeletonData.findSkin("normalMap") != null) {
-            entity.add(normalMapRendering);
+        if (component.skeletonData.findSkin("normalMap") == null) {
+            normalMapRenderingCM.remove(entity);
         }
 
         component.worldMultiplier = 1f / projectInfoVO.pixelToWorld;
@@ -83,12 +92,12 @@ public class SpineComponentFactory extends ComponentFactory {
         AnimationStateData stateData = new AnimationStateData(component.skeletonData);
         component.state = new AnimationState(stateData);
 
-        DimensionsComponent dimensionsComponent = ComponentRetriever.get(entity, DimensionsComponent.class);
+        DimensionsComponent dimensionsComponent = ComponentRetriever.get(entity, DimensionsComponent.class, engine);
         component.computeBoundBox(dimensionsComponent);
         dimensionsComponent.width *= component.worldMultiplier;
         dimensionsComponent.height *= component.worldMultiplier;
 
-        TransformComponent transformComponent = ComponentRetriever.get(entity, TransformComponent.class);
+        TransformComponent transformComponent = ComponentRetriever.get(entity, TransformComponent.class, engine);
         if (Float.isNaN(vo.originX)) transformComponent.originX = dimensionsComponent.width / 2f;
         else transformComponent.originX = vo.originX;
 
@@ -97,25 +106,21 @@ public class SpineComponentFactory extends ComponentFactory {
 
         component.setAnimation(vo.currentAnimationName.isEmpty() ? component.skeletonData.getAnimations().get(0).getName() : vo.currentAnimationName);
 
-        entity.add(component);
-
         return component;
     }
 
-    protected SpineDataComponent createSpineDataComponent(Entity entity, SpineVO vo) {
-        SpineDataComponent component = new SpineDataComponent();
+    protected SpineDataComponent createSpineDataComponent(int entity, SpineVO vo) {
+        SpineDataComponent component = spineDataCM.get(entity);
+        SpineObjectComponent spineObjectComponent = spineObjectCM.get(entity);
         component.animationName = vo.animationName;
 
         component.currentAnimationName = vo.currentAnimationName.isEmpty() ? spineObjectComponent.skeletonData.getAnimations().get(0).getName() : vo.currentAnimationName;
-
-        entity.add(component);
 
         return component;
     }
 
     @Override
-    protected TransformComponent createTransformComponent(Entity entity, MainItemVO vo, DimensionsComponent dimensionsComponent) {
-        TransformComponent component = engine.createComponent(TransformComponent.class);
+    protected void initializeTransformComponent(TransformComponent component, MainItemVO vo, DimensionsComponent dimensionsComponent) {
         component.rotation = vo.rotation;
         component.scaleX = vo.scaleX;
         component.scaleY = vo.scaleY;
@@ -124,9 +129,5 @@ public class SpineComponentFactory extends ComponentFactory {
 
         component.flipX = vo.flipX;
         component.flipY = vo.flipY;
-
-        entity.add(component);
-
-        return component;
     }
 }

@@ -1,7 +1,6 @@
 package games.rednblack.h2d.extention.spine;
 
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Entity;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -15,11 +14,11 @@ import games.rednblack.editor.renderer.systems.render.logic.Drawable;
 import games.rednblack.editor.renderer.utils.value.DynamicValue;
 
 public class SpineDrawableLogic implements Drawable, DynamicValue<Boolean> {
-    private final ComponentMapper<SpineObjectComponent> spineObjectComponentMapper = ComponentMapper.getFor(SpineObjectComponent.class);
-    private final ComponentMapper<TransformComponent> transformComponentMapper = ComponentMapper.getFor(TransformComponent.class);
-    private final ComponentMapper<SpineObjectComponent> spineMapper = ComponentMapper.getFor(SpineObjectComponent.class);
-    private final ComponentMapper<TintComponent> tintComponentMapper = ComponentMapper.getFor(TintComponent.class);
-    private final ComponentMapper<NormalMapRendering> normalMapMapper = ComponentMapper.getFor(NormalMapRendering.class);
+    protected ComponentMapper<SpineObjectComponent> spineObjectComponentMapper;
+    protected ComponentMapper<TransformComponent> transformComponentMapper;
+    protected ComponentMapper<SpineObjectComponent> spineMapper;
+    protected ComponentMapper<TintComponent> tintComponentMapper;
+    protected ComponentMapper<NormalMapRendering> normalMapMapper;
 
     private final SkeletonRenderer skeletonRenderer;
     private RenderingType renderingType;
@@ -29,7 +28,7 @@ public class SpineDrawableLogic implements Drawable, DynamicValue<Boolean> {
     }
 
     @Override
-    public void draw(Batch batch, Entity entity, float parentAlpha, RenderingType renderingType) {
+    public void draw(Batch batch, int entity, float parentAlpha, RenderingType renderingType) {
         this.renderingType = renderingType;
         SpineObjectComponent spineObjectComponent = spineMapper.get(entity);
         NormalMapRendering normalMapRendering = normalMapMapper.get(entity);
@@ -53,7 +52,7 @@ public class SpineDrawableLogic implements Drawable, DynamicValue<Boolean> {
         color.a = oldAlpha;
     }
 
-    protected Matrix4 computeTransform (Entity rootEntity) {
+    protected Matrix4 computeTransform (int rootEntity) {
         SpineObjectComponent spineObjectComponent = spineObjectComponentMapper.get(rootEntity);
         TransformComponent curTransform = transformComponentMapper.get(rootEntity);
 
@@ -76,13 +75,13 @@ public class SpineDrawableLogic implements Drawable, DynamicValue<Boolean> {
         return curTransform.computedTransform;
     }
 
-    protected void applyTransform (Entity rootEntity, Batch batch) {
+    protected void applyTransform (int rootEntity, Batch batch) {
         TransformComponent curTransform = transformComponentMapper.get(rootEntity);
         curTransform.oldTransform.set(batch.getTransformMatrix());
         batch.setTransformMatrix(curTransform.computedTransform);
     }
 
-    protected void resetTransform (Entity rootEntity, Batch batch) {
+    protected void resetTransform (int rootEntity, Batch batch) {
         TransformComponent curTransform = transformComponentMapper.get(rootEntity);
         batch.setTransformMatrix(curTransform.oldTransform);
     }

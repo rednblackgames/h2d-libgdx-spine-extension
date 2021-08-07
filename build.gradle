@@ -15,9 +15,9 @@ tasks.withType(Javadoc).all {
 
 dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-    implementation "com.badlogicgames.ashley:ashley:$ashleyVersion"
     implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 
+    implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
     implementation "com.esotericsoftware.spine:spine-libgdx:$spineVersion"
 
     implementation project(":hyperlap2d-runtime-libgdx")

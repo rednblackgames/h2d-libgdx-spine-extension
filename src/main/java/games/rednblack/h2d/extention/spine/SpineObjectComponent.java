@@ -1,15 +1,15 @@
 package games.rednblack.h2d.extention.spine;
 
+import com.artemis.PooledComponent;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.esotericsoftware.spine.*;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.MeshAttachment;
 import com.esotericsoftware.spine.attachments.RegionAttachment;
-import games.rednblack.editor.renderer.components.BaseComponent;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
 
-public class SpineObjectComponent implements BaseComponent {
+public class SpineObjectComponent extends PooledComponent {
 	public SkeletonData skeletonData;
 	public Skeleton skeleton;
 	public SkeletonJson skeletonJson;
