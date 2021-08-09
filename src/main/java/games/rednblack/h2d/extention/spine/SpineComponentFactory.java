@@ -32,13 +32,14 @@ import games.rednblack.editor.renderer.data.SpineVO;
 import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.editor.renderer.factory.component.ComponentFactory;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
-import games.rednblack.editor.renderer.utils.ComponentRetriever;
 
 public class SpineComponentFactory extends ComponentFactory {
 
     protected ComponentMapper<SpineObjectComponent> spineObjectCM;
     protected ComponentMapper<SpineDataComponent> spineDataCM;
     protected ComponentMapper<NormalMapRendering> normalMapRenderingCM;
+    protected ComponentMapper<DimensionsComponent> dimensionsCM;
+    protected ComponentMapper<TransformComponent> transformCM;
 
     private EntityTransmuter transmuter;
 
@@ -92,12 +93,12 @@ public class SpineComponentFactory extends ComponentFactory {
         AnimationStateData stateData = new AnimationStateData(component.skeletonData);
         component.state = new AnimationState(stateData);
 
-        DimensionsComponent dimensionsComponent = ComponentRetriever.get(entity, DimensionsComponent.class, engine);
+        DimensionsComponent dimensionsComponent = dimensionsCM.get(entity);
         component.computeBoundBox(dimensionsComponent);
         dimensionsComponent.width *= component.worldMultiplier;
         dimensionsComponent.height *= component.worldMultiplier;
 
-        TransformComponent transformComponent = ComponentRetriever.get(entity, TransformComponent.class, engine);
+        TransformComponent transformComponent = transformCM.get(entity);
         if (Float.isNaN(vo.originX)) transformComponent.originX = dimensionsComponent.width / 2f;
         else transformComponent.originX = vo.originX;
 
