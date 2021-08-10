@@ -30,7 +30,7 @@ import games.rednblack.editor.renderer.utils.Version;
  */
 public class SpineItemType implements IExternalItemType {
 
-    public static final Version SUPPORTED_SPINE_VERSION = new Version("3.8");
+    public static final Version SUPPORTED_SPINE_VERSION = new Version("4.0");
 
     private ComponentFactory factory;
     private IteratingSystem system;
