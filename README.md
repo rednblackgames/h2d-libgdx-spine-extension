@@ -1,6 +1,6 @@
 ## HyperLap2D libGDX Spine Extension
 
-HyperLap2D extension for libgdx runtime that adds Spine rendering support.
+HyperLap2D extension for libgdx runtime that adds [Spine](http://en.esotericsoftware.com/) rendering support.
 
 ### Integration
 
