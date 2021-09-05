@@ -11,9 +11,8 @@ import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.components.normal.NormalMapRendering;
 import games.rednblack.editor.renderer.systems.render.logic.Drawable;
-import games.rednblack.editor.renderer.utils.value.DynamicValue;
 
-public class SpineDrawableLogic implements Drawable, DynamicValue<Boolean> {
+public class SpineDrawableLogic implements Drawable {
     protected ComponentMapper<SpineObjectComponent> spineObjectComponentMapper;
     protected ComponentMapper<TransformComponent> transformComponentMapper;
     protected ComponentMapper<SpineObjectComponent> spineMapper;
@@ -21,7 +20,6 @@ public class SpineDrawableLogic implements Drawable, DynamicValue<Boolean> {
     protected ComponentMapper<NormalMapRendering> normalMapMapper;
 
     private final SkeletonRenderer skeletonRenderer;
-    private RenderingType renderingType;
 
     public SpineDrawableLogic() {
         skeletonRenderer = new SkeletonRenderer();
@@ -29,11 +27,10 @@ public class SpineDrawableLogic implements Drawable, DynamicValue<Boolean> {
 
     @Override
     public void draw(Batch batch, int entity, float parentAlpha, RenderingType renderingType) {
-        this.renderingType = renderingType;
         SpineObjectComponent spineObjectComponent = spineMapper.get(entity);
         NormalMapRendering normalMapRendering = normalMapMapper.get(entity);
-        if (normalMapRendering != null && normalMapRendering.useNormalMap == null)
-            normalMapRendering.useNormalMap = this;
+        if (normalMapRendering != null)
+            normalMapRendering.useNormalMap = renderingType == RenderingType.NORMAL_MAP;
 
         TintComponent tint = tintComponentMapper.get(entity);
 
@@ -84,10 +81,5 @@ public class SpineDrawableLogic implements Drawable, DynamicValue<Boolean> {
     protected void resetTransform (int rootEntity, Batch batch) {
         TransformComponent curTransform = transformComponentMapper.get(rootEntity);
         batch.setTransformMatrix(curTransform.oldTransform);
-    }
-
-    @Override
-    public Boolean get() {
-        return renderingType == RenderingType.NORMAL_MAP;
     }
 }
