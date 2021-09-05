@@ -10,9 +10,9 @@ import com.esotericsoftware.spine.SkeletonRenderer;
 import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.components.normal.NormalMapRendering;
-import games.rednblack.editor.renderer.systems.render.logic.Drawable;
+import games.rednblack.editor.renderer.systems.render.logic.DrawableLogic;
 
-public class SpineDrawableLogic implements Drawable {
+public class SpineDrawableLogic implements DrawableLogic {
     protected ComponentMapper<SpineObjectComponent> spineObjectComponentMapper;
     protected ComponentMapper<TransformComponent> transformComponentMapper;
     protected ComponentMapper<SpineObjectComponent> spineMapper;

@@ -21,7 +21,7 @@ import games.rednblack.editor.renderer.commons.IExternalItemType;
 import games.rednblack.editor.renderer.components.SpineDataComponent;
 import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.editor.renderer.factory.component.ComponentFactory;
-import games.rednblack.editor.renderer.systems.render.logic.Drawable;
+import games.rednblack.editor.renderer.systems.render.logic.DrawableLogic;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.editor.renderer.utils.Version;
 
@@ -34,12 +34,12 @@ public class SpineItemType implements IExternalItemType {
 
     private ComponentFactory factory;
     private IteratingSystem system;
-    private Drawable drawable;
+    private DrawableLogic drawableLogic;
 
     public SpineItemType() {
         factory = new SpineComponentFactory();
         system = new SpineSystem();
-        drawable = new SpineDrawableLogic();
+        drawableLogic = new SpineDrawableLogic();
     }
 
     @Override
@@ -48,8 +48,8 @@ public class SpineItemType implements IExternalItemType {
     }
 
     @Override
-    public Drawable getDrawable() {
-        return drawable;
+    public DrawableLogic getDrawable() {
+        return drawableLogic;
     }
 
     @Override
