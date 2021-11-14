@@ -10,15 +10,15 @@ import com.esotericsoftware.spine.attachments.RegionAttachment;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
 
 public class SpineObjectComponent extends PooledComponent {
-	public SkeletonData skeletonData;
-	public Skeleton skeleton;
-	public SkeletonJson skeletonJson;
-    public AnimationState state;
+	public transient SkeletonData skeletonData;
+	public transient Skeleton skeleton;
+	public transient SkeletonJson skeletonJson;
+    public transient AnimationState state;
     public float minX;
     public float minY;
     public float worldMultiplier = 1;
 
-    private final FloatArray temp = new FloatArray();
+    private transient final FloatArray temp = new FloatArray();
 
     public Array<Animation> getAnimations() {
         return skeletonData.getAnimations();
