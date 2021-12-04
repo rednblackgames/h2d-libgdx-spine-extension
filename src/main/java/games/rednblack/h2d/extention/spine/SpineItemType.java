@@ -15,11 +15,13 @@ public class SpineItemType implements IExternalItemType {
     public static final Version SUPPORTED_SPINE_VERSION = new Version("4.0");
 
     private ComponentFactory factory;
+    private ComponentFactoryV2 factoryV2;
     private IteratingSystem system;
     private DrawableLogic drawableLogic;
 
     public SpineItemType() {
         factory = new SpineComponentFactory();
+        factoryV2 = new SpineComponentFactoryV2();
         system = new SpineSystem();
         drawableLogic = new SpineDrawableLogic();
     }
@@ -46,7 +48,7 @@ public class SpineItemType implements IExternalItemType {
 
     @Override
     public ComponentFactoryV2 getComponentFactoryV2() {
-        return new SpineComponentFactoryV2();
+        return factoryV2;
     }
 
     @Override
