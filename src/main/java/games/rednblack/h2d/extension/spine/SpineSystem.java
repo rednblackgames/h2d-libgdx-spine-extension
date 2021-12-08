@@ -1,4 +1,4 @@
-package games.rednblack.h2d.extention.spine;
+package games.rednblack.h2d.extension.spine;
 
 import com.artemis.ComponentMapper;
 import com.artemis.annotations.All;

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module rename-to="games.rednblack.h2d.extention.spine">
+<module rename-to="games.rednblack.h2d.extension.spine">
     <source path="spine">
         <include name="**/*"/>
     </source>
+
+    <extend-configuration-property name="gdx.reflect.include" value="games.rednblack.h2d.extension.spine" />
+    <extend-configuration-property name="artemis.reflect.include" value="games.rednblack.h2d.extension.spine" />
+
+    <inherits name="com.esotericsoftware.spine"/>
 </module>

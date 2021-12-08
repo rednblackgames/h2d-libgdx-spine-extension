@@ -1,4 +1,4 @@
-package games.rednblack.h2d.extention.spine;
+package games.rednblack.h2d.extension.spine;
 
 import com.artemis.systems.IteratingSystem;
 import games.rednblack.editor.renderer.commons.IExternalItemType;
