@@ -9,7 +9,10 @@ import com.esotericsoftware.spine.attachments.MeshAttachment;
 import com.esotericsoftware.spine.attachments.RegionAttachment;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
 
-public class SpineObjectComponent extends PooledComponent {
+public class SpineComponent extends PooledComponent {
+    public String animationName = "";
+    public String currentAnimationName = "";
+
 	public transient SkeletonData skeletonData;
 	public transient Skeleton skeleton;
 	public transient SkeletonJson skeletonJson;
@@ -83,5 +86,8 @@ public class SpineObjectComponent extends PooledComponent {
         worldMultiplier = 1;
 
         temp.clear();
+
+        animationName = "";
+        currentAnimationName = "";
     }
 }

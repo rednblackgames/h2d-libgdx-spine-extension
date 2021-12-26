@@ -13,9 +13,9 @@ import games.rednblack.editor.renderer.components.normal.NormalMapRendering;
 import games.rednblack.editor.renderer.systems.render.logic.DrawableLogic;
 
 public class SpineDrawableLogic implements DrawableLogic {
-    protected ComponentMapper<SpineObjectComponent> spineObjectComponentMapper;
+    protected ComponentMapper<SpineComponent> spineObjectComponentMapper;
     protected ComponentMapper<TransformComponent> transformComponentMapper;
-    protected ComponentMapper<SpineObjectComponent> spineMapper;
+    protected ComponentMapper<SpineComponent> spineMapper;
     protected ComponentMapper<TintComponent> tintComponentMapper;
     protected ComponentMapper<NormalMapRendering> normalMapMapper;
 
@@ -27,7 +27,7 @@ public class SpineDrawableLogic implements DrawableLogic {
 
     @Override
     public void draw(Batch batch, int entity, float parentAlpha, RenderingType renderingType) {
-        SpineObjectComponent spineObjectComponent = spineMapper.get(entity);
+        SpineComponent spineObjectComponent = spineMapper.get(entity);
         NormalMapRendering normalMapRendering = normalMapMapper.get(entity);
         if (normalMapRendering != null)
             normalMapRendering.useNormalMap = renderingType == RenderingType.NORMAL_MAP;
@@ -50,7 +50,7 @@ public class SpineDrawableLogic implements DrawableLogic {
     }
 
     protected Matrix4 computeTransform (int rootEntity) {
-        SpineObjectComponent spineObjectComponent = spineObjectComponentMapper.get(rootEntity);
+        SpineComponent spineObjectComponent = spineObjectComponentMapper.get(rootEntity);
         TransformComponent curTransform = transformComponentMapper.get(rootEntity);
 
         Affine2 worldTransform = curTransform.worldTransform;

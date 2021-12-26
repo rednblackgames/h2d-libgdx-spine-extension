@@ -10,19 +10,15 @@ import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonJson;
 import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
-import games.rednblack.editor.renderer.components.SpineDataComponent;
 import games.rednblack.editor.renderer.components.normal.NormalMapRendering;
 import games.rednblack.editor.renderer.data.MainItemVO;
 import games.rednblack.editor.renderer.data.ProjectInfoVO;
-import games.rednblack.editor.renderer.data.SpineVO;
 import games.rednblack.editor.renderer.factory.component.ComponentFactory;
-import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
 
 public class SpineComponentFactory extends ComponentFactory {
 
-    protected ComponentMapper<SpineObjectComponent> spineObjectCM;
-    protected ComponentMapper<SpineDataComponent> spineDataCM;
+    protected ComponentMapper<SpineComponent> spineCM;
     protected ComponentMapper<NormalMapRendering> normalMapRenderingCM;
 
     private EntityTransmuter transmuter;
@@ -36,8 +32,7 @@ public class SpineComponentFactory extends ComponentFactory {
         super.injectDependencies(engine, rayHandler, world, rm);
 
         transmuter = new EntityTransmuterFactory(engine)
-                .add(SpineObjectComponent.class)
-                .add(SpineDataComponent.class)
+                .add(SpineComponent.class)
                 .add(NormalMapRendering.class)
                 .build();
     }
@@ -50,12 +45,12 @@ public class SpineComponentFactory extends ComponentFactory {
 
     @Override
     public int getEntityType() {
-        return EntityFactory.SPINE_TYPE;
+        return SpineItemType.SPINE_TYPE;
     }
 
     @Override
     public void setInitialData(int entity, Object data) {
-        spineDataCM.get(entity).animationName = (String) data;
+        spineCM.get(entity).animationName = (String) data;
     }
 
     @Override
@@ -66,21 +61,20 @@ public class SpineComponentFactory extends ComponentFactory {
     @Override
     public void initializeSpecialComponentsFromVO(int entity, MainItemVO voG) {
         SpineVO vo = (SpineVO) voG;
-        SpineDataComponent spineDataComponent = spineDataCM.get(entity);
-        spineDataComponent.animationName = vo.animationName;
-        spineDataComponent.currentAnimationName = vo.currentAnimationName;
+        SpineComponent spineComponent = spineCM.get(entity);
+        spineComponent.animationName = vo.animationName;
+        spineComponent.currentAnimationName = vo.currentAnimationName;
     }
 
     @Override
     protected void initializeTransientComponents(int entity) {
         super.initializeTransientComponents(entity);
-        SpineDataComponent data = spineDataCM.get(entity);
         ProjectInfoVO projectInfoVO = rm.getProjectVO();
 
-        SpineObjectComponent component = spineObjectCM.get(entity);
+        SpineComponent component = spineCM.get(entity);
         NormalMapRendering normalMapRendering = normalMapRenderingCM.get(entity);
-        component.skeletonJson = new SkeletonJson(new ResourceRetrieverAttachmentLoader(data.animationName, rm, normalMapRendering));
-        component.skeletonData = component.skeletonJson.readSkeletonData((rm.getSkeletonJSON(data.animationName)));
+        component.skeletonJson = new SkeletonJson(new ResourceRetrieverAttachmentLoader(component.animationName, rm, normalMapRendering));
+        component.skeletonData = component.skeletonJson.readSkeletonData((rm.getExternalItemType(getEntityType(), component.animationName)));
         component.skeleton = new Skeleton(component.skeletonData);
         if (component.skeletonData.findSkin("normalMap") == null) {
             normalMapRenderingCM.remove(entity);
@@ -88,16 +82,16 @@ public class SpineComponentFactory extends ComponentFactory {
 
         component.worldMultiplier = 1f / projectInfoVO.pixelToWorld;
 
-        data.currentAnimationName = data.currentAnimationName.isEmpty() ? component.skeletonData.getAnimations().get(0).getName() : data.currentAnimationName;
+        component.currentAnimationName = component.currentAnimationName.isEmpty() ? component.skeletonData.getAnimations().get(0).getName() : component.currentAnimationName;
 
         AnimationStateData stateData = new AnimationStateData(component.skeletonData);
         component.state = new AnimationState(stateData);
-        component.setAnimation(data.currentAnimationName);
+        component.setAnimation(component.currentAnimationName);
     }
 
     @Override
     protected void initializeDimensionsComponent(int entity) {
-        SpineObjectComponent component = spineObjectCM.get(entity);
+        SpineComponent component = spineCM.get(entity);
         DimensionsComponent dimensionsComponent = dimensionsCM.get(entity);
         component.computeBoundBox(dimensionsComponent);
         dimensionsComponent.width *= component.worldMultiplier;
