@@ -1,14 +1,19 @@
 package games.rednblack.h2d.extension.spine;
 
 import com.artemis.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.ObjectSet;
+import com.esotericsoftware.spine.SkeletonJson;
 import games.rednblack.editor.renderer.commons.IExternalItemType;
 import games.rednblack.editor.renderer.factory.component.ComponentFactory;
+import games.rednblack.editor.renderer.resources.IResourceRetriever;
 import games.rednblack.editor.renderer.systems.render.logic.DrawableLogic;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.editor.renderer.utils.HyperJson;
 import games.rednblack.editor.renderer.utils.Version;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class SpineItemType implements IExternalItemType {
     public static final int SPINE_TYPE = 9;
@@ -18,7 +23,7 @@ public class SpineItemType implements IExternalItemType {
 
     private ComponentFactory factory;
     private IteratingSystem system;
-    private DrawableLogic drawableLogic;
+    private SpineDrawableLogic drawableLogic;
 
     public SpineItemType() {
         factory = new SpineComponentFactory();
@@ -59,6 +64,29 @@ public class SpineItemType implements IExternalItemType {
     }
 
     @Override
+    public void loadExternalTypesAsync(IResourceRetriever rm, ObjectSet<String> assetsToLoad, HashMap<String, Object> assets) {
+        // empty existing ones that are not scheduled to load
+        for (String key : assets.keySet()) {
+            if (!assetsToLoad.contains(key)) {
+                assets.remove(key);
+            }
+        }
+
+        // load scheduled
+        for (String name : assetsToLoad) {
+            SpineDataObject spineDataObject = new SpineDataObject();
+            spineDataObject.skeletonJson = new SkeletonJson(new ResourceRetrieverAttachmentLoader(name, rm, drawableLogic));
+            spineDataObject.skeletonData = spineDataObject.skeletonJson.readSkeletonData(Gdx.files.internal(formatResourcePath(name)));
+
+            assets.put(name, spineDataObject);
+        }
+    }
+
+    @Override
+    public void loadExternalTypesSync(IResourceRetriever rm, ObjectSet<String> assetsToLoad, HashMap<String, Object> assets) {
+
+    }
+
     public String formatResourcePath(String resName) {
         return "orig" + File.separator + spineAnimationsPath + File.separator + resName + File.separator + resName + ".json";
     }

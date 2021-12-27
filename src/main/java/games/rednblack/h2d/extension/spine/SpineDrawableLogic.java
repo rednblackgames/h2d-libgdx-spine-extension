@@ -9,17 +9,18 @@ import com.badlogic.gdx.math.Matrix4;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
-import games.rednblack.editor.renderer.components.normal.NormalMapRendering;
 import games.rednblack.editor.renderer.systems.render.logic.DrawableLogic;
+import games.rednblack.editor.renderer.utils.value.DynamicValue;
 
-public class SpineDrawableLogic implements DrawableLogic {
+public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> {
     protected ComponentMapper<SpineComponent> spineObjectComponentMapper;
     protected ComponentMapper<TransformComponent> transformComponentMapper;
     protected ComponentMapper<SpineComponent> spineMapper;
     protected ComponentMapper<TintComponent> tintComponentMapper;
-    protected ComponentMapper<NormalMapRendering> normalMapMapper;
 
     private final SkeletonRenderer skeletonRenderer;
+
+    private boolean normalMap = false;
 
     public SpineDrawableLogic() {
         skeletonRenderer = new SkeletonRenderer();
@@ -27,10 +28,9 @@ public class SpineDrawableLogic implements DrawableLogic {
 
     @Override
     public void draw(Batch batch, int entity, float parentAlpha, RenderingType renderingType) {
+        normalMap = renderingType == RenderingType.NORMAL_MAP;
+
         SpineComponent spineObjectComponent = spineMapper.get(entity);
-        NormalMapRendering normalMapRendering = normalMapMapper.get(entity);
-        if (normalMapRendering != null)
-            normalMapRendering.useNormalMap = renderingType == RenderingType.NORMAL_MAP;
 
         TintComponent tint = tintComponentMapper.get(entity);
 
@@ -47,6 +47,8 @@ public class SpineDrawableLogic implements DrawableLogic {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         color.a = oldAlpha;
+
+        normalMap = false;
     }
 
     protected Matrix4 computeTransform (int rootEntity) {
@@ -81,5 +83,10 @@ public class SpineDrawableLogic implements DrawableLogic {
     protected void resetTransform (int rootEntity, Batch batch) {
         TransformComponent curTransform = transformComponentMapper.get(rootEntity);
         batch.setTransformMatrix(curTransform.oldTransform);
+    }
+
+    @Override
+    public Boolean get() {
+        return normalMap ? Boolean.TRUE : Boolean.FALSE;
     }
 }
