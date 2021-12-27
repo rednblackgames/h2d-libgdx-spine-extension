@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.esotericsoftware.spine.AnimationState;
 import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.Skeleton;
-import com.esotericsoftware.spine.SkeletonJson;
 import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
 import games.rednblack.editor.renderer.components.normal.NormalMapRendering;
@@ -72,9 +71,9 @@ public class SpineComponentFactory extends ComponentFactory {
         ProjectInfoVO projectInfoVO = rm.getProjectVO();
 
         SpineComponent component = spineCM.get(entity);
-        NormalMapRendering normalMapRendering = normalMapRenderingCM.get(entity);
-        component.skeletonJson = new SkeletonJson(new ResourceRetrieverAttachmentLoader(component.animationName, rm, normalMapRendering));
-        component.skeletonData = component.skeletonJson.readSkeletonData((rm.getExternalItemType(getEntityType(), component.animationName)));
+        SpineDataObject spineDataObject = (SpineDataObject) rm.getExternalItemType(getEntityType(), component.animationName);
+        component.skeletonJson = spineDataObject.skeletonJson;
+        component.skeletonData = spineDataObject.skeletonData;
         component.skeleton = new Skeleton(component.skeletonData);
         if (component.skeletonData.findSkin("normalMap") == null) {
             normalMapRenderingCM.remove(entity);
