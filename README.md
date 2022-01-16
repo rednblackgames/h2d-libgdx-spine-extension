@@ -21,17 +21,17 @@ dependencies {
 <dependency>
   <groupId>games.rednblack.editor</groupId>
   <artifactId>libgdx-spine-extension</artifactId>
-  <version>0.0.7</version>
+  <version>0.0.8</version>
   <type>pom</type>
 </dependency>
 ```
 
 **Spine Runtime compatibility**
 
-| HyperLap2D         | Spine              |
-| ------------------ | ------------------ |
-| 0.0.8-SNAPSHOT     | 4.0.18.1           |
-| 0.0.7              | 3.8.55.1           |
+| HyperLap2D | Spine              |
+|------------| ------------------ |
+| 0.0.8      | 4.0.18.1           |
+| 0.0.7      | 3.8.55.1           |
 
 ### License
 Spine is a commercial software distributed with its own license, in order to include Spine support in your project, please, be sure to have a valid [Spine License](https://github.com/EsotericSoftware/spine-runtimes)
