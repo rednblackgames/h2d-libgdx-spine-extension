@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class SpineItemType implements IExternalItemType {
     public static final int SPINE_TYPE = 9;
 
-    public String spineAnimationsPath = "spine_animations";
+    public String spineAnimationsPath = "spine-animations";
     public static final Version SUPPORTED_SPINE_VERSION = new Version("4.0");
 
     private ComponentFactory factory;
@@ -88,6 +88,6 @@ public class SpineItemType implements IExternalItemType {
     }
 
     public String formatResourcePath(String resName) {
-        return "orig" + File.separator + spineAnimationsPath + File.separator + resName + File.separator + resName + ".json";
+        return spineAnimationsPath + File.separator + resName + File.separator + resName + ".json";
     }
 }
