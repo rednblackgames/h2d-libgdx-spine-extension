@@ -12,6 +12,7 @@ import games.rednblack.editor.renderer.components.DimensionsComponent;
 public class SpineComponent extends PooledComponent {
     public String animationName = "";
     public String currentAnimationName = "";
+    public String currentSkinName = "default";
 
 	public transient SkeletonData skeletonData;
 	public transient Skeleton skeleton;
@@ -27,9 +28,18 @@ public class SpineComponent extends PooledComponent {
         return skeletonData.getAnimations();
     }
 
+    public Array<Skin> getSkins() {
+        return skeletonData.getSkins();
+    }
+
     public void setAnimation(String animName) {
         AnimationState.TrackEntry trackEntry = state.setAnimation(0, animName, true);
         trackEntry.setMixDuration(0.2f);
+    }
+
+    public void setSkin(String skin) {
+        skeleton.setSkin(skin);
+        skeleton.setSlotsToSetupPose();
     }
 
     public AnimationState getState() {
@@ -89,5 +99,6 @@ public class SpineComponent extends PooledComponent {
 
         animationName = "";
         currentAnimationName = "";
+        currentSkinName = "default";
     }
 }

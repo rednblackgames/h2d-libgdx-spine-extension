@@ -63,6 +63,7 @@ public class SpineComponentFactory extends ComponentFactory {
         SpineComponent spineComponent = spineCM.get(entity);
         spineComponent.animationName = vo.animationName;
         spineComponent.currentAnimationName = vo.currentAnimationName;
+        spineComponent.currentSkinName = vo.currentSkinName;
     }
 
     @Override
@@ -86,6 +87,7 @@ public class SpineComponentFactory extends ComponentFactory {
         AnimationStateData stateData = new AnimationStateData(component.skeletonData);
         component.state = new AnimationState(stateData);
         component.setAnimation(component.currentAnimationName);
+        component.setSkin(component.currentSkinName);
     }
 
     @Override

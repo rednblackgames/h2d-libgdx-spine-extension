@@ -10,6 +10,8 @@ public class SpineVO extends MainItemVO {
     public String animationName = "";
     public String currentAnimationName = "";
 
+    public String currentSkinName = "default";
+
     public SpineVO() {
 
     }
@@ -18,6 +20,7 @@ public class SpineVO extends MainItemVO {
         super(vo);
         animationName = vo.animationName;
         currentAnimationName = vo.currentAnimationName;
+        currentSkinName = vo.currentSkinName;
     }
 
     @Override
@@ -27,6 +30,7 @@ public class SpineVO extends MainItemVO {
         SpineComponent spineComponent = ComponentRetriever.get(entity, SpineComponent.class, engine);
         animationName = spineComponent.animationName;
         currentAnimationName = spineComponent.currentAnimationName;
+        currentSkinName = spineComponent.currentSkinName;
     }
 
     @Override
