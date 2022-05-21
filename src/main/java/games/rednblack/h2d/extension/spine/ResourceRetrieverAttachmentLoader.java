@@ -6,6 +6,8 @@ import com.esotericsoftware.spine.attachments.*;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
 import games.rednblack.editor.renderer.utils.value.DynamicValue;
 
+import java.util.regex.Matcher;
+
 public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
     private IResourceRetriever resourceRetriever;
     private DynamicValue<Boolean> useNormalMap;
@@ -24,6 +26,7 @@ public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
     }
 
     public RegionAttachment newRegionAttachment (Skin skin, String name, String path) {
+        path = path.replaceAll("/", Matcher.quoteReplacement("$"));
         TextureRegion region = resourceRetriever.getTextureRegion(prefix + path);
         if (region == null) throw new RuntimeException("Region not found in atlas: " + path + " (region attachment: " + name + ")");
         RegionAttachment attachment;
