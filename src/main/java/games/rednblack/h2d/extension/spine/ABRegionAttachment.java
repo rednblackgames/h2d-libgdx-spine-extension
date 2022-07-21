@@ -3,8 +3,10 @@ package games.rednblack.h2d.extension.spine;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.RegionAttachment;
+import com.esotericsoftware.spine.attachments.Sequence;
 import games.rednblack.editor.renderer.utils.value.DynamicValue;
 
 public class ABRegionAttachment extends RegionAttachment {
@@ -21,8 +23,8 @@ public class ABRegionAttachment extends RegionAttachment {
     }
 
     @Override
-    public void updateOffset() {
-        super.updateOffset(); attachmentB.updateOffset();
+    public void updateRegion() {
+        super.updateRegion(); attachmentB.updateRegion();
     }
 
     @Override
@@ -37,8 +39,8 @@ public class ABRegionAttachment extends RegionAttachment {
     }
 
     @Override
-    public void computeWorldVertices(Bone bone, float[] worldVertices, int offset, int stride) {
-        super.computeWorldVertices(bone, worldVertices, offset, stride); attachmentB.computeWorldVertices(bone, worldVertices, offset, stride);
+    public void computeWorldVertices(Slot slot, float[] worldVertices, int offset, int stride) {
+        super.computeWorldVertices(slot, worldVertices, offset, stride); attachmentB.computeWorldVertices(slot, worldVertices, offset, stride);
     }
 
     @Override
@@ -137,7 +139,18 @@ public class ABRegionAttachment extends RegionAttachment {
     }
 
     @Override
-    public Attachment copy() {
+    public Sequence getSequence() {
+        if (useAttachmentB != null && useAttachmentB.get()) return attachmentB.getSequence(); else return super.getSequence();
+    }
+
+    @Override
+    public void setSequence(Sequence sequence) {
+        //Sequence to attachmentB is set manually
+        super.setSequence(sequence);
+    }
+
+    @Override
+    public RegionAttachment copy() {
         if (useAttachmentB != null && useAttachmentB.get()) return attachmentB.copy(); else return super.copy();
     }
 

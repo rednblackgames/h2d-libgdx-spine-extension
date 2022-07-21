@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.MeshAttachment;
-import com.esotericsoftware.spine.attachments.VertexAttachment;
+import com.esotericsoftware.spine.attachments.Sequence;
 import games.rednblack.editor.renderer.utils.value.DynamicValue;
 
 public class ABMeshAttachment extends MeshAttachment {
@@ -34,8 +34,14 @@ public class ABMeshAttachment extends MeshAttachment {
     }
 
     @Override
-    public void updateUVs() {
-        attachmentB.updateUVs(); super.updateUVs();
+    public void updateRegion() {
+        attachmentB.updateRegion(); super.updateRegion();
+    }
+
+    @Override
+    public void computeWorldVertices(Slot slot, int start, int count, float[] worldVertices, int offset, int stride) {
+        attachmentB.computeWorldVertices(slot, start, count, worldVertices, offset, stride);
+        super.computeWorldVertices(slot, start, count, worldVertices, offset, stride);
     }
 
     @Override
@@ -124,6 +130,17 @@ public class ABMeshAttachment extends MeshAttachment {
     }
 
     @Override
+    public Sequence getSequence() {
+        if (useAttachmentB != null && useAttachmentB.get()) return attachmentB.getSequence(); else return super.getSequence();
+    }
+
+    @Override
+    public void setSequence(Sequence sequence) {
+        //Sequence to attachmentB is set manually
+        super.setSequence(sequence);
+    }
+
+    @Override
     public MeshAttachment getParentMesh() {
         if (useAttachmentB != null && useAttachmentB.get()) return attachmentB.getParentMesh(); else return super.getParentMesh();
     }
@@ -134,29 +151,13 @@ public class ABMeshAttachment extends MeshAttachment {
     }
 
     @Override
-    public Attachment copy() {
+    public MeshAttachment copy() {
         if (useAttachmentB != null && useAttachmentB.get()) return attachmentB.copy(); else return super.copy();
     }
 
     @Override
     public MeshAttachment newLinkedMesh() {
         if (useAttachmentB != null && useAttachmentB.get()) return attachmentB.newLinkedMesh(); else return super.newLinkedMesh();
-    }
-
-    @Override
-    public void computeWorldVertices(Slot slot, int start, int count, float[] worldVertices, int offset, int stride) {
-        attachmentB.computeWorldVertices(slot, start, count, worldVertices, offset, stride);
-        super.computeWorldVertices(slot, start, count, worldVertices, offset, stride);
-    }
-
-    @Override
-    public VertexAttachment getDeformAttachment() {
-        /*if (useAttachmentB != null && useAttachmentB.get()) return attachmentB.getDeformAttachment(); else*/ return super.getDeformAttachment();
-    }
-
-    @Override
-    public void setDeformAttachment(VertexAttachment deformAttachment) {
-        /*attachmentB.setDeformAttachment(deformAttachment);*/ super.setDeformAttachment(deformAttachment);
     }
 
     @Override
@@ -187,6 +188,16 @@ public class ABMeshAttachment extends MeshAttachment {
     @Override
     public void setWorldVerticesLength(int worldVerticesLength) {
         attachmentB.setWorldVerticesLength(worldVerticesLength); super.setWorldVerticesLength(worldVerticesLength);
+    }
+
+    @Override
+    public Attachment getTimelineAttachment() {
+        if (useAttachmentB != null && useAttachmentB.get()) return attachmentB.getTimelineAttachment(); else return super.getTimelineAttachment();
+    }
+
+    @Override
+    public void setTimelineAttachment(Attachment timelineAttachment) {
+        attachmentB.setTimelineAttachment(timelineAttachment); super.setTimelineAttachment(timelineAttachment);
     }
 
     @Override
