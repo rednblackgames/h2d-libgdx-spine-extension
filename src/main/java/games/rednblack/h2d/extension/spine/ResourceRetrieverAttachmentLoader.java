@@ -35,7 +35,7 @@ public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
             RegionAttachment normalAttachment = new RegionAttachment(name);
             if (sequence != null) {
                 Sequence normalSequence = new CopySequence(sequence);
-                loadSequence(name, path, normalSequence, true);
+                loadSequence(path, normalSequence, true);
                 normalAttachment.setSequence(normalSequence);
             } else {
                 normalAttachment.setRegion(resourceRetriever.getTextureRegion(prefix + path + ".normal"));
@@ -43,7 +43,7 @@ public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
 
             attachment = new ABRegionAttachment(normalAttachment, name);
             if (sequence != null) {
-                loadSequence(name, path, sequence, false);
+                loadSequence(path, sequence, false);
             } else {
                 attachment.setRegion(region);
             }
@@ -51,7 +51,7 @@ public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
         } else {
             attachment = new RegionAttachment(name);
             if (sequence != null) {
-                loadSequence(name, path, sequence, false);
+                loadSequence(path, sequence, false);
             } else {
                 attachment.setRegion(region);
             }
@@ -64,11 +64,11 @@ public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
         TextureRegion region = resourceRetriever.getTextureRegion(prefix + path);
         if (region == null) throw new RuntimeException("Region not found in atlas: " + path + " (mesh attachment: " + name + ")");
         MeshAttachment attachment;
-        if (useNormalMap != null && resourceRetriever.hasTextureRegion(prefix + path + ".normal")) {
+        if (useNormalMap != null && (resourceRetriever.hasTextureRegion(prefix + path + ".normal") || sequence != null)) {
             MeshAttachment normalAttachment = new MeshAttachment(name);
             if (sequence != null) {
                 Sequence normalSequence = new CopySequence(sequence);
-                loadSequence(name, path, normalSequence, true);
+                loadSequence(path, normalSequence, true);
                 normalAttachment.setSequence(normalSequence);
             } else {
                 normalAttachment.setRegion(resourceRetriever.getTextureRegion(prefix + path + ".normal"));
@@ -76,7 +76,7 @@ public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
 
             attachment = new ABMeshAttachment(normalAttachment, name);
             if (sequence != null) {
-                loadSequence(name, path, sequence, false);
+                loadSequence(path, sequence, false);
             } else {
                 attachment.setRegion(region);
             }
@@ -84,7 +84,7 @@ public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
         } else {
             attachment = new MeshAttachment(name);
             if (sequence != null) {
-                loadSequence(name, path, sequence, false);
+                loadSequence(path, sequence, false);
             } else {
                 attachment.setRegion(region);
             }
@@ -108,12 +108,13 @@ public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
         return new PointAttachment(name);
     }
 
-    private void loadSequence (String name, String basePath, Sequence sequence, boolean normal) {
+    private boolean loadSequence (String basePath, Sequence sequence, boolean normal) {
         TextureRegion[] regions = sequence.getRegions();
         for (int i = 0, n = regions.length; i < n; i++) {
             String path = sequence.getPath(basePath, i);
             regions[i] = resourceRetriever.getTextureRegion(prefix + path + (normal ? ".normal" : ""));
-            if (regions[i] == null) throw new RuntimeException("Region not found in atlas: " + path + " (sequence: " + name + ")");
+            if (regions[i] == null) return false;
         }
+        return true;
     }
 }
