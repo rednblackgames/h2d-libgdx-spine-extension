@@ -22,6 +22,9 @@ public class SpineComponent extends PooledComponent {
     public float minY;
     public float worldMultiplier = 1;
 
+    public Array<SlotRange> splitRenderingRange = new Array<>();
+    public int splitRenderingRangeIndex = 0;
+
     private transient final FloatArray temp = new FloatArray();
 
     public Array<Animation> getAnimations() {
@@ -101,5 +104,7 @@ public class SpineComponent extends PooledComponent {
         animationName = "";
         currentAnimationName = "";
         currentSkinName = "default";
+
+        splitRenderingRange.clear();
     }
 }

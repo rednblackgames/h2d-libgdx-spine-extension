@@ -1,12 +1,14 @@
 package games.rednblack.h2d.extension.spine;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
+import com.artemis.EntitySubscription;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
-import com.esotericsoftware.spine.SkeletonRenderer;
 import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.systems.render.logic.DrawableLogic;
@@ -17,13 +19,32 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
     protected ComponentMapper<TransformComponent> transformComponentMapper;
     protected ComponentMapper<SpineComponent> spineMapper;
     protected ComponentMapper<TintComponent> tintComponentMapper;
+    private final SkeletonRenderSeparator skeletonRenderer;
 
-    private final SkeletonRenderer skeletonRenderer;
+    protected com.artemis.World engine;
+    private EntitySubscription spineEntities;
 
     private boolean normalMap = false;
 
     public SpineDrawableLogic() {
-        skeletonRenderer = new SkeletonRenderer();
+        skeletonRenderer = new SkeletonRenderSeparator();
+    }
+
+    @Override
+    public void beginPipeline() {
+        if (spineEntities == null) {
+            spineEntities = engine.getAspectSubscriptionManager().get(Aspect.all(SpineComponent.class));
+        }
+    }
+
+    @Override
+    public void endPipeline() {
+        IntBag actives = spineEntities.getEntities();
+        int[] ids = actives.getData();
+        for (int i = 0, s = actives.size(); s > i; i++) {
+            SpineComponent spineObjectComponent = spineMapper.get(ids[i]);
+            spineObjectComponent.splitRenderingRangeIndex = 0;
+        }
     }
 
     @Override
@@ -42,7 +63,12 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
 
         computeTransform(entity).mulLeft(batch.getTransformMatrix());
         applyTransform(entity, batch);
-        skeletonRenderer.draw(batch, spineObjectComponent.skeleton);
+
+        if (spineObjectComponent.splitRenderingRangeIndex < spineObjectComponent.splitRenderingRange.size) {
+            SlotRange slotRange = spineObjectComponent.splitRenderingRange.get(spineObjectComponent.splitRenderingRangeIndex);
+            skeletonRenderer.draw(batch, spineObjectComponent.skeleton, slotRange);
+            spineObjectComponent.splitRenderingRangeIndex++;
+        }
         resetTransform(entity, batch);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 

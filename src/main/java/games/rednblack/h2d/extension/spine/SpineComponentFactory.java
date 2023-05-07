@@ -76,6 +76,7 @@ public class SpineComponentFactory extends ComponentFactory {
         component.skeletonJson = spineDataObject.skeletonJson;
         component.skeletonData = spineDataObject.skeletonData;
         component.skeleton = new Skeleton(component.skeletonData);
+        component.splitRenderingRange.add(new SlotRange(0, component.skeleton.getDrawOrder().size));
         if (component.skeletonData.findSkin("normalMap") == null) {
             normalMapRenderingCM.remove(entity);
         }
