@@ -93,7 +93,7 @@ public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
     }
 
     public BoundingBoxAttachment newBoundingBoxAttachment (Skin skin, String name) {
-        return new BoundingBoxAttachment(name);
+        return new Box2DBoundingBoxAttachment(name);
     }
 
     public ClippingAttachment newClippingAttachment (Skin skin, String name) {

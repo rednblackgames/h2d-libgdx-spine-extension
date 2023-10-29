@@ -3,10 +3,9 @@ package games.rednblack.h2d.extension.spine;
 import com.artemis.ComponentMapper;
 import com.artemis.EntityTransmuter;
 import com.artemis.EntityTransmuterFactory;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.esotericsoftware.spine.AnimationState;
-import com.esotericsoftware.spine.AnimationStateData;
-import com.esotericsoftware.spine.Skeleton;
+import com.esotericsoftware.spine.*;
 import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
 import games.rednblack.editor.renderer.components.normal.NormalMapRendering;
@@ -14,6 +13,7 @@ import games.rednblack.editor.renderer.data.MainItemVO;
 import games.rednblack.editor.renderer.data.ProjectInfoVO;
 import games.rednblack.editor.renderer.factory.component.ComponentFactory;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
+import games.rednblack.editor.renderer.utils.poly.PolygonRuntimeUtils;
 
 public class SpineComponentFactory extends ComponentFactory {
 
@@ -35,7 +35,6 @@ public class SpineComponentFactory extends ComponentFactory {
                 .add(NormalMapRendering.class)
                 .build();
     }
-
 
     @Override
     public void transmuteEntity(int entity) {
@@ -89,6 +88,22 @@ public class SpineComponentFactory extends ComponentFactory {
         component.state = new AnimationState(stateData);
         component.setAnimation(component.currentAnimationName);
         component.setSkin(component.currentSkinName);
+
+        for (Skin skin : component.skeletonData.getSkins()) {
+            for (Skin.SkinEntry skinEntry : skin.getAttachments()) {
+                if (!(skinEntry.getAttachment() instanceof Box2DBoundingBoxAttachment)) continue;
+
+                Box2DBoundingBoxAttachment attachment = (Box2DBoundingBoxAttachment) skinEntry.getAttachment();
+                attachment.vertices = new Vector2[attachment.getVertices().length / 2];
+
+                //Create a working array for bounding boxes vertices
+                for (int i = 0; i < attachment.getVertices().length; i += 2) {
+                    attachment.vertices[i / 2] = new Vector2(attachment.getVertices()[i] * component.worldMultiplier, attachment.getVertices()[i + 1] * component.worldMultiplier);
+                }
+                attachment.polygonizedVertices = PolygonRuntimeUtils.polygonize(attachment.vertices);
+                attachment.updateBoundingBox();
+            }
+        }
     }
 
     @Override

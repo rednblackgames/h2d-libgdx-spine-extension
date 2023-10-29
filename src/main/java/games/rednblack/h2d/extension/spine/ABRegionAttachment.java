@@ -2,9 +2,7 @@ package games.rednblack.h2d.extension.spine;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.esotericsoftware.spine.Bone;
 import com.esotericsoftware.spine.Slot;
-import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.RegionAttachment;
 import com.esotericsoftware.spine.attachments.Sequence;
 import games.rednblack.editor.renderer.utils.value.DynamicValue;

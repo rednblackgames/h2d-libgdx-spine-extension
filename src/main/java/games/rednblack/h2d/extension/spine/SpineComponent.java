@@ -3,6 +3,7 @@ package games.rednblack.h2d.extension.spine;
 import com.artemis.PooledComponent;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.spine.*;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.MeshAttachment;
@@ -26,6 +27,8 @@ public class SpineComponent extends PooledComponent {
     public int splitRenderingRangeIndex = 0;
 
     private transient final FloatArray temp = new FloatArray();
+
+    public transient ObjectMap<String, SlotBody> bodies = new ObjectMap<>(0);
 
     public Array<Animation> getAnimations() {
         return skeletonData.getAnimations();
@@ -106,5 +109,11 @@ public class SpineComponent extends PooledComponent {
         currentSkinName = "default";
 
         splitRenderingRange.clear();
+        resetBodies();
+    }
+
+    public void resetBodies() {
+        for (SlotBody slotBody : bodies.values()) slotBody.body.getWorld().destroyBody(slotBody.body);
+        bodies.clear();
     }
 }
