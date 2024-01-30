@@ -88,7 +88,7 @@ public class SpineItemType implements IExternalItemType {
 
     }
 
-    public String formatResourcePath(String resName) {
+    protected String formatResourcePath(String resName) {
         return spineAnimationsPath + File.separator + resName + File.separator + resName + ".json";
     }
 }

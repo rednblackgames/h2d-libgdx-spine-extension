@@ -19,12 +19,12 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
     protected ComponentMapper<TransformComponent> transformComponentMapper;
     protected ComponentMapper<SpineComponent> spineMapper;
     protected ComponentMapper<TintComponent> tintComponentMapper;
-    private final SkeletonRenderSeparator skeletonRenderer;
+    protected final SkeletonRenderSeparator skeletonRenderer;
 
     protected com.artemis.World engine;
     private EntitySubscription spineEntities;
 
-    private boolean normalMap = false;
+    protected boolean normalMap = false;
 
     public SpineDrawableLogic() {
         skeletonRenderer = new SkeletonRenderSeparator();

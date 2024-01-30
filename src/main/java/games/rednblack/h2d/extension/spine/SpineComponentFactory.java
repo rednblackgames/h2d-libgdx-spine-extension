@@ -20,7 +20,7 @@ public class SpineComponentFactory extends ComponentFactory {
     protected ComponentMapper<SpineComponent> spineCM;
     protected ComponentMapper<NormalMapRendering> normalMapRenderingCM;
 
-    private EntityTransmuter transmuter;
+    protected EntityTransmuter transmuter;
 
     public SpineComponentFactory() {
 
