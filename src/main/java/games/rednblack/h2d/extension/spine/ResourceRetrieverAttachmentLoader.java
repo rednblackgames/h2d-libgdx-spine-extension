@@ -61,6 +61,7 @@ public class ResourceRetrieverAttachmentLoader implements AttachmentLoader {
     }
 
     public MeshAttachment newMeshAttachment (Skin skin, String name, String path, @Null Sequence sequence) {
+        path = path.replaceAll("/", Matcher.quoteReplacement("$"));
         TextureRegion region = resourceRetriever.getTextureRegion(prefix + path);
         if (region == null) throw new RuntimeException("Region not found in atlas: " + path + " (mesh attachment: " + name + ")");
         MeshAttachment attachment;

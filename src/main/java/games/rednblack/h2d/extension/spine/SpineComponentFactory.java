@@ -83,6 +83,9 @@ public class SpineComponentFactory extends ComponentFactory {
         component.worldMultiplier = 1f / projectInfoVO.pixelToWorld;
 
         component.currentAnimationName = component.currentAnimationName.isEmpty() ? component.skeletonData.getAnimations().get(0).getName() : component.currentAnimationName;
+        if (component.skeletonData.findSkin(component.currentSkinName) == null && component.skeletonData.getSkins().size > 0) {
+            component.currentSkinName = component.skeletonData.getSkins().get(0).getName();
+        }
 
         AnimationStateData stateData = new AnimationStateData(component.skeletonData);
         component.state = new AnimationState(stateData);
