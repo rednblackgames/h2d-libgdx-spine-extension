@@ -70,7 +70,7 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
             spineObjectComponent.splitRenderingRangeIndex++;
         }
         resetTransform(entity, batch);
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_ONE);
 
         color.a = oldAlpha;
 

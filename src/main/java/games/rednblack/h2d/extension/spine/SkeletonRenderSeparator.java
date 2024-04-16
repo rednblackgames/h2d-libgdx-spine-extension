@@ -93,7 +93,7 @@ public class SkeletonRenderSeparator {
                         alpha = 0;
                     }
                     blendMode = slotBlendMode;
-                    blendMode.apply(batch, pmaBlendModes);
+                    HyperBlendMode.apply(blendMode, batch, pmaBlendModes);
                 }
 
                 float c = NumberUtils.intToFloatColor((int)alpha << 24 //
@@ -193,7 +193,7 @@ public class SkeletonRenderSeparator {
                         alpha = 0;
                     }
                     blendMode = slotBlendMode;
-                    blendMode.apply(batch, pmaBlendModes);
+                    HyperBlendMode.apply(blendMode, batch, pmaBlendModes);
                 }
 
                 float c = NumberUtils.intToFloatColor((int)alpha << 24 //
@@ -292,7 +292,7 @@ public class SkeletonRenderSeparator {
                         alpha = 0;
                     }
                     blendMode = slotBlendMode;
-                    blendMode.apply(batch, pmaBlendModes);
+                    HyperBlendMode.apply(blendMode, batch, pmaBlendModes);
                 }
 
                 float red = r * color.r * multiplier;
