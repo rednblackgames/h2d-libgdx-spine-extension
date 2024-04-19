@@ -22,6 +22,7 @@ public class SpineComponent extends PooledComponent {
     public float minX;
     public float minY;
     public float worldMultiplier = 1;
+    public float lastX, lastY;
 
     public Array<SlotRange> splitRenderingRange = new Array<>();
     public int splitRenderingRangeIndex = 0;

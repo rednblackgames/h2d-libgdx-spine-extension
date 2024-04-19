@@ -3,6 +3,7 @@ package games.rednblack.h2d.extension.spine;
 import com.artemis.ComponentMapper;
 import com.artemis.annotations.All;
 import com.artemis.systems.IteratingSystem;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -13,12 +14,13 @@ import com.esotericsoftware.spine.Slot;
 import games.rednblack.editor.renderer.SceneLoader;
 import games.rednblack.editor.renderer.components.ParentNodeComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
+import games.rednblack.editor.renderer.systems.strategy.InterpolationSystem;
 import games.rednblack.editor.renderer.utils.TmpFloatArray;
 import games.rednblack.editor.renderer.utils.TransformMathUtils;
 import games.rednblack.editor.renderer.utils.poly.PolygonRuntimeUtils;
 
 @All({SpineComponent.class})
-public class SpineSystem extends IteratingSystem {
+public class SpineSystem extends IteratingSystem implements InterpolationSystem {
     protected ComponentMapper<SpineComponent> spineObjectComponentMapper;
     protected ComponentMapper<TransformComponent> transformComponentMapper;
     protected ComponentMapper<ParentNodeComponent> parentMapper;
@@ -34,16 +36,24 @@ public class SpineSystem extends IteratingSystem {
 
     @Override
     protected void process(int entity) {
+        TransformComponent transformComponent = transformComponentMapper.get(entity);
         SpineComponent spineObjectComponent = spineObjectComponentMapper.get(entity);
 
-        spineObjectComponent.state.update(world.getDelta()); // Update the animation time.
-        spineObjectComponent.state.apply(spineObjectComponent.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
+        if (transformComponent.x != spineObjectComponent.lastX || transformComponent.y != spineObjectComponent.lastY) {
+            float scaleX = transformComponent.scaleX * (transformComponent.flipX ? -1 : 1);
+            float scaleY = transformComponent.scaleY * (transformComponent.flipY ? -1 : 1);
+            int directionX = scaleX > 0 ? 1 : -1;
+            int directionY = scaleY > 0 ? 1 : -1;
+            spineObjectComponent.skeleton.physicsTranslate(directionX * (transformComponent.x - spineObjectComponent.lastX) / spineObjectComponent.worldMultiplier, directionY * (transformComponent.y - spineObjectComponent.lastY) / spineObjectComponent.worldMultiplier);
+            spineObjectComponent.lastX = transformComponent.x;
+            spineObjectComponent.lastY = transformComponent.y;
+        }
 
-        spineObjectComponent.skeleton.updateWorldTransform(Skeleton.Physics.update); //
+        spineObjectComponent.state.update(world.getDelta()); // Update the animation time.
+        spineObjectComponent.state.apply(spineObjectComponent.skeleton);
+        spineObjectComponent.skeleton.update(world.getDelta());
 
         if (sceneLoader.getWorld() == null) return;
-
-        TransformComponent transformComponent = transformComponentMapper.get(entity);
 
         for (Slot slot : spineObjectComponent.skeleton.getSlots()) {
             if (!(slot.getAttachment() instanceof Box2DBoundingBoxAttachment)) {
@@ -169,6 +179,16 @@ public class SpineSystem extends IteratingSystem {
             float rotation = flip * TransformMathUtils.localToAscendantRotation(-1, entity, bone.getWorldRotationX(), transformComponentMapper, parentMapper);
 
             body.setTransform(x, y, rotation * MathUtils.degreesToRadians);
+        }
+    }
+
+    @Override
+    public void interpolate(float alpha) {
+        IntBag bag = subscription.getEntities();
+        for (int i = 0, s = bag.size(); i < s; ++i) {
+            int entity = bag.get(i);
+            SpineComponent spineObjectComponent = spineObjectComponentMapper.get(entity);
+            spineObjectComponent.skeleton.updateWorldTransform(Skeleton.Physics.update);
         }
     }
 }
