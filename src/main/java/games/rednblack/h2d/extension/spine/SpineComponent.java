@@ -53,7 +53,7 @@ public class SpineComponent extends PooledComponent {
     }
 
     public void computeBoundBox(DimensionsComponent dimensionsComponent) {
-        skeleton.updateWorldTransform();
+        skeleton.updateWorldTransform(Skeleton.Physics.update);
         Array<Slot> drawOrder = skeleton.getDrawOrder();
         minX = Float.MAX_VALUE;
         minY = Float.MAX_VALUE;

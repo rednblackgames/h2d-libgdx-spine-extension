@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.Slot;
 import games.rednblack.editor.renderer.SceneLoader;
 import games.rednblack.editor.renderer.components.ParentNodeComponent;
@@ -38,7 +39,7 @@ public class SpineSystem extends IteratingSystem {
         spineObjectComponent.state.update(world.getDelta()); // Update the animation time.
         spineObjectComponent.state.apply(spineObjectComponent.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 
-        spineObjectComponent.skeleton.updateWorldTransform(); //
+        spineObjectComponent.skeleton.updateWorldTransform(Skeleton.Physics.update); //
 
         if (sceneLoader.getWorld() == null) return;
 

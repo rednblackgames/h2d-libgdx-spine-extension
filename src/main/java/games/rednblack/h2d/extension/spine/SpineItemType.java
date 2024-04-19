@@ -19,7 +19,7 @@ public class SpineItemType implements IExternalItemType {
     public static final int SPINE_TYPE = 9;
 
     public String spineAnimationsPath = "spine-animations";
-    public static final Version SUPPORTED_SPINE_VERSION = new Version("4.1");
+    public static final Version SUPPORTED_SPINE_VERSION = new Version("4.2");
 
 
     private ComponentFactory factory;
