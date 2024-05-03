@@ -15,7 +15,6 @@ import games.rednblack.editor.renderer.systems.render.logic.DrawableLogic;
 import games.rednblack.editor.renderer.utils.value.DynamicValue;
 
 public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> {
-    protected ComponentMapper<SpineComponent> spineObjectComponentMapper;
     protected ComponentMapper<TransformComponent> transformComponentMapper;
     protected ComponentMapper<SpineComponent> spineMapper;
     protected ComponentMapper<TintComponent> tintComponentMapper;
@@ -52,6 +51,7 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
         normalMap = renderingType == RenderingType.NORMAL_MAP;
 
         SpineComponent spineObjectComponent = spineMapper.get(entity);
+        TransformComponent curTransform = transformComponentMapper.get(entity);
 
         TintComponent tint = tintComponentMapper.get(entity);
 
@@ -61,15 +61,17 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
         float oldAlpha = color.a;
         spineObjectComponent.skeleton.getColor().a *= parentAlpha;
 
-        computeTransform(entity).mulLeft(batch.getTransformMatrix());
-        applyTransform(entity, batch);
+        computeTransform(spineObjectComponent, curTransform).mulLeft(batch.getTransformMatrix());
+        curTransform.oldTransform.set(batch.getTransformMatrix());
+        batch.setTransformMatrix(curTransform.computedTransform);
 
         if (spineObjectComponent.splitRenderingRangeIndex < spineObjectComponent.splitRenderingRange.size) {
             SlotRange slotRange = spineObjectComponent.splitRenderingRange.get(spineObjectComponent.splitRenderingRangeIndex);
             skeletonRenderer.draw(batch, spineObjectComponent.skeleton, slotRange);
             spineObjectComponent.splitRenderingRangeIndex++;
         }
-        resetTransform(entity, batch);
+
+        batch.setTransformMatrix(curTransform.oldTransform);
         batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_ONE);
 
         color.a = oldAlpha;
@@ -77,10 +79,7 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
         normalMap = false;
     }
 
-    protected Matrix4 computeTransform (int rootEntity) {
-        SpineComponent spineObjectComponent = spineObjectComponentMapper.get(rootEntity);
-        TransformComponent curTransform = transformComponentMapper.get(rootEntity);
-
+    protected Matrix4 computeTransform (SpineComponent spineObjectComponent, TransformComponent curTransform) {
         Affine2 worldTransform = curTransform.worldTransform;
 
         float originX = curTransform.originX;
@@ -98,17 +97,6 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
         curTransform.computedTransform.set(worldTransform);
 
         return curTransform.computedTransform;
-    }
-
-    protected void applyTransform (int rootEntity, Batch batch) {
-        TransformComponent curTransform = transformComponentMapper.get(rootEntity);
-        curTransform.oldTransform.set(batch.getTransformMatrix());
-        batch.setTransformMatrix(curTransform.computedTransform);
-    }
-
-    protected void resetTransform (int rootEntity, Batch batch) {
-        TransformComponent curTransform = transformComponentMapper.get(rootEntity);
-        batch.setTransformMatrix(curTransform.oldTransform);
     }
 
     @Override
