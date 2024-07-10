@@ -48,6 +48,7 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
 
     @Override
     public void draw(Batch batch, int entity, float parentAlpha, RenderingType renderingType) {
+        batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_ONE);
         normalMap = renderingType == RenderingType.NORMAL_MAP;
 
         SpineComponent spineObjectComponent = spineMapper.get(entity);
@@ -72,7 +73,6 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
         }
 
         batch.setTransformMatrix(curTransform.oldTransform);
-        batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_ONE);
 
         color.a = oldAlpha;
 
