@@ -30,7 +30,7 @@ dependencies {
 
 | HyperLap2D     | Spine |
 |----------------|-------|
-| 0.1.5-SNAPSHOT | 4.2.0 |
+| 0.1.5-SNAPSHOT | 4.2.7 |
 | 0.1.4          | 4.1.0 |
 
 ### License
