@@ -3,7 +3,6 @@ package games.rednblack.h2d.extension.spine;
 import com.artemis.ComponentMapper;
 import com.artemis.annotations.All;
 import com.artemis.systems.IteratingSystem;
-import com.artemis.utils.IntBag;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -14,13 +13,13 @@ import com.esotericsoftware.spine.Slot;
 import games.rednblack.editor.renderer.SceneLoader;
 import games.rednblack.editor.renderer.components.ParentNodeComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
-import games.rednblack.editor.renderer.systems.strategy.InterpolationSystem;
+import games.rednblack.editor.renderer.systems.strategy.LogicSystem;
 import games.rednblack.editor.renderer.utils.TmpFloatArray;
 import games.rednblack.editor.renderer.utils.TransformMathUtils;
 import games.rednblack.editor.renderer.utils.poly.PolygonRuntimeUtils;
 
 @All({SpineComponent.class})
-public class SpineSystem extends IteratingSystem implements InterpolationSystem {
+public class SpineSystem extends IteratingSystem implements LogicSystem {
     protected ComponentMapper<SpineComponent> spineObjectComponentMapper;
     protected ComponentMapper<TransformComponent> transformComponentMapper;
     protected ComponentMapper<ParentNodeComponent> parentMapper;
@@ -52,6 +51,7 @@ public class SpineSystem extends IteratingSystem implements InterpolationSystem 
         spineObjectComponent.state.update(world.getDelta()); // Update the animation time.
         spineObjectComponent.state.apply(spineObjectComponent.skeleton);
         spineObjectComponent.skeleton.update(world.getDelta());
+        spineObjectComponent.skeleton.updateWorldTransform(Skeleton.Physics.update);
 
         if (sceneLoader.getWorld() == null) return;
 
@@ -179,16 +179,6 @@ public class SpineSystem extends IteratingSystem implements InterpolationSystem 
             float rotation = flip * TransformMathUtils.localToAscendantRotation(-1, entity, bone.getWorldRotationX(), transformComponentMapper, parentMapper);
 
             body.setTransform(x, y, rotation * MathUtils.degreesToRadians);
-        }
-    }
-
-    @Override
-    public void interpolate(float alpha) {
-        IntBag bag = subscription.getEntities();
-        for (int i = 0, s = bag.size(); i < s; ++i) {
-            int entity = bag.get(i);
-            SpineComponent spineObjectComponent = spineObjectComponentMapper.get(entity);
-            spineObjectComponent.skeleton.updateWorldTransform(Skeleton.Physics.update);
         }
     }
 }
