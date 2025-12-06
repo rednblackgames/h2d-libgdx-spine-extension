@@ -13,13 +13,14 @@ import com.esotericsoftware.spine.Slot;
 import games.rednblack.editor.renderer.SceneLoader;
 import games.rednblack.editor.renderer.components.ParentNodeComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
-import games.rednblack.editor.renderer.systems.strategy.LogicSystem;
+import games.rednblack.editor.renderer.systems.strategy.FixedTimestep;
 import games.rednblack.editor.renderer.utils.TmpFloatArray;
 import games.rednblack.editor.renderer.utils.TransformMathUtils;
 import games.rednblack.editor.renderer.utils.poly.PolygonRuntimeUtils;
 
+@FixedTimestep
 @All({SpineComponent.class})
-public class SpineSystem extends IteratingSystem implements LogicSystem {
+public class SpineSystem extends IteratingSystem {
     protected ComponentMapper<SpineComponent> spineObjectComponentMapper;
     protected ComponentMapper<TransformComponent> transformComponentMapper;
     protected ComponentMapper<ParentNodeComponent> parentMapper;
