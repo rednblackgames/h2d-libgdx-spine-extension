@@ -13,12 +13,10 @@ import com.esotericsoftware.spine.Slot;
 import games.rednblack.editor.renderer.SceneLoader;
 import games.rednblack.editor.renderer.components.ParentNodeComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
-import games.rednblack.editor.renderer.systems.strategy.FixedTimestep;
 import games.rednblack.editor.renderer.utils.TmpFloatArray;
 import games.rednblack.editor.renderer.utils.TransformMathUtils;
 import games.rednblack.editor.renderer.utils.poly.PolygonRuntimeUtils;
 
-@FixedTimestep
 @All({SpineComponent.class})
 public class SpineSystem extends IteratingSystem {
     protected ComponentMapper<SpineComponent> spineObjectComponentMapper;
@@ -44,7 +42,12 @@ public class SpineSystem extends IteratingSystem {
             float scaleY = transformComponent.scaleY * (transformComponent.flipY ? -1 : 1);
             int directionX = scaleX > 0 ? 1 : -1;
             int directionY = scaleY > 0 ? 1 : -1;
-            spineObjectComponent.skeleton.physicsTranslate(directionX * (transformComponent.x - spineObjectComponent.lastX) / spineObjectComponent.worldMultiplier, directionY * (transformComponent.y - spineObjectComponent.lastY) / spineObjectComponent.worldMultiplier);
+
+            spineObjectComponent.skeleton.physicsTranslate(
+                    directionX * (transformComponent.x - spineObjectComponent.lastX) / spineObjectComponent.worldMultiplier,
+                    directionY * (transformComponent.y - spineObjectComponent.lastY) / spineObjectComponent.worldMultiplier
+            );
+
             spineObjectComponent.lastX = transformComponent.x;
             spineObjectComponent.lastY = transformComponent.y;
         }
@@ -71,7 +74,7 @@ public class SpineSystem extends IteratingSystem {
 
             if (spineObjectComponent.bodies.get(slot.toString()) == null) {
                 //Slot has a BB attachment but no body exists in the world
-                boxBodyDef.type = BodyDef.BodyType.StaticBody;
+                boxBodyDef.type = BodyDef.BodyType.KinematicBody;
                 boxBodyDef.awake = true;
                 body = sceneLoader.getWorld().createBody(boxBodyDef);
                 body.setUserData(entity);
