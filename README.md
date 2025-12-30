@@ -21,7 +21,7 @@ dependencies {
 <dependency>
   <groupId>games.rednblack.editor</groupId>
   <artifactId>libgdx-spine-extension</artifactId>
-  <version>0.1.6</version>
+  <version>0.1.7</version>
   <type>pom</type>
 </dependency>
 ```
