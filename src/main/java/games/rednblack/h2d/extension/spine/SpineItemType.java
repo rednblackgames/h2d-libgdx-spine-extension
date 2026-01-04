@@ -1,6 +1,6 @@
 package games.rednblack.h2d.extension.spine;
 
-import com.artemis.systems.IteratingSystem;
+import games.rednblack.editor.renderer.ecs.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.esotericsoftware.spine.SkeletonJson;

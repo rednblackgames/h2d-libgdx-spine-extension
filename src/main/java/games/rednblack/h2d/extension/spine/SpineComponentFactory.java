@@ -1,8 +1,9 @@
 package games.rednblack.h2d.extension.spine;
 
-import com.artemis.ComponentMapper;
-import com.artemis.EntityTransmuter;
-import com.artemis.EntityTransmuterFactory;
+import games.rednblack.editor.renderer.ecs.ComponentMapper;
+import games.rednblack.editor.renderer.ecs.Engine;
+import games.rednblack.editor.renderer.ecs.EntityTransmuter;
+import games.rednblack.editor.renderer.ecs.EntityTransmuterFactory;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.esotericsoftware.spine.*;
@@ -27,7 +28,7 @@ public class SpineComponentFactory extends ComponentFactory {
     }
 
     @Override
-    public void injectDependencies(com.artemis.World engine, RayHandler rayHandler, World world, IResourceRetriever rm) {
+    public void injectDependencies(Engine engine, RayHandler rayHandler, World world, IResourceRetriever rm) {
         super.injectDependencies(engine, rayHandler, world, rm);
 
         transmuter = new EntityTransmuterFactory(engine)

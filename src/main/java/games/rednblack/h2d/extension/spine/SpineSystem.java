@@ -1,8 +1,8 @@
 package games.rednblack.h2d.extension.spine;
 
-import com.artemis.ComponentMapper;
-import com.artemis.annotations.All;
-import com.artemis.systems.IteratingSystem;
+import games.rednblack.editor.renderer.ecs.ComponentMapper;
+import games.rednblack.editor.renderer.ecs.annotations.All;
+import games.rednblack.editor.renderer.ecs.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -52,9 +52,9 @@ public class SpineSystem extends IteratingSystem {
             spineObjectComponent.lastY = transformComponent.y;
         }
 
-        spineObjectComponent.state.update(world.getDelta()); // Update the animation time.
+        spineObjectComponent.state.update(engine.getDelta()); // Update the animation time.
         spineObjectComponent.state.apply(spineObjectComponent.skeleton);
-        spineObjectComponent.skeleton.update(world.getDelta());
+        spineObjectComponent.skeleton.update(engine.getDelta());
         spineObjectComponent.skeleton.updateWorldTransform(Skeleton.Physics.update);
 
         if (sceneLoader.getWorld() == null) return;

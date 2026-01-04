@@ -1,6 +1,6 @@
 package games.rednblack.h2d.extension.spine;
 
-import com.artemis.PooledComponent;
+import games.rednblack.editor.renderer.ecs.PooledComponent;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ObjectMap;

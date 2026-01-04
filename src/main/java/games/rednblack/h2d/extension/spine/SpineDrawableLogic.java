@@ -1,9 +1,10 @@
 package games.rednblack.h2d.extension.spine;
 
-import com.artemis.Aspect;
-import com.artemis.ComponentMapper;
-import com.artemis.EntitySubscription;
-import com.artemis.utils.IntBag;
+import games.rednblack.editor.renderer.ecs.Aspect;
+import games.rednblack.editor.renderer.ecs.ComponentMapper;
+import games.rednblack.editor.renderer.ecs.EntitySubscription;
+import games.rednblack.editor.renderer.ecs.Engine;
+import games.rednblack.editor.renderer.ecs.utils.IntBag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -20,7 +21,7 @@ public class SpineDrawableLogic implements DrawableLogic, DynamicValue<Boolean> 
     protected ComponentMapper<TintComponent> tintComponentMapper;
     protected final SkeletonRenderSeparator skeletonRenderer;
 
-    protected com.artemis.World engine;
+    protected Engine engine;
     private EntitySubscription spineEntities;
 
     protected boolean normalMap = false;
