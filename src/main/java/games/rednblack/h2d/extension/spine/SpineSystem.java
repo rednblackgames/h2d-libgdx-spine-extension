@@ -98,7 +98,8 @@ public class SpineSystem extends IteratingSystem {
                         verts[j] *= transformComponent.scaleY * (transformComponent.flipX ? -1 : 1);
                         verts[j + 1] *= transformComponent.scaleX * (transformComponent.flipY ? -1 : 1);
 
-                        slotBody.checksum += verts[j] + verts[j + 1];
+                        slotBody.checksum += Float.floatToRawIntBits(verts[j]) * 31
+                                + Float.floatToRawIntBits(verts[j + 1]) * 37;
                     }
 
                     tmpPolygonShape.set(verts);
@@ -116,12 +117,14 @@ public class SpineSystem extends IteratingSystem {
                 if (!body.isActive()) body.setActive(true);
 
                 //Calc a vertex checksum to understand if vertices are changed, if so update box2d fixture
-                float checksum = 0;
+                int checksum = 0;
                 //TODO attachment vertices are always the same, Slot#getDeform should be used properly to get the list of deformed vertices
                 float[] verts = attachment.getVertices();
                 for (int j = 0; j < verts.length; j += 2) {
-                    checksum += (verts[j] * transformComponent.scaleY * (transformComponent.flipX ? -1 : 1))
-                            + (verts[j + 1] * transformComponent.scaleX * (transformComponent.flipY ? -1 : 1));
+                    float scaledX = verts[j] * transformComponent.scaleY * (transformComponent.flipX ? -1 : 1);
+                    float scaledY = verts[j + 1] * transformComponent.scaleX * (transformComponent.flipY ? -1 : 1);
+                    checksum += Float.floatToRawIntBits(scaledX) * 31
+                            + Float.floatToRawIntBits(scaledY) * 37;
                 }
 
                 if (checksum != slotBody.checksum) {
